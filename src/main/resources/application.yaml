@@ -3,9 +3,9 @@ spring:
     name: WebLibrary
   datasource:
     hikari:
-      username: ${db_username}
-      password: ${db_password}
-    url: jdbc:postgresql://localhost:5432/weblibrary
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true
