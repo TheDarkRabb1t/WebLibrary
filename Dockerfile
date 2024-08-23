@@ -1,18 +1,17 @@
-FROM maven:3.8.5-openjdk-21 AS build
+FROM openjdk:21-slim
+
+RUN apt-get update && apt-get install -y maven
 
 WORKDIR /app
 
-COPY pom.xml ./
-COPY src ./src
+COPY pom.xml .
+
+COPY src/ ./src/
 
 RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
-
-WORKDIR /app
-
-COPY --from=build /app/target/WebLibrary-1.0.0.jar .
-
-CMD ["java", "-jar", "WebLibrary-1.0.0.jar"]
+RUN mv target/*.jar /app/WebLibrary.jar
 
 EXPOSE 8080
+
+CMD ["java", "-jar", "WebLibrary.jar"]
