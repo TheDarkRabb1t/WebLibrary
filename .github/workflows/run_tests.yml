@@ -20,6 +20,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./compose.yaml"
+        run: docker.exe compose -f compose.yaml -p weblibrary up -d
