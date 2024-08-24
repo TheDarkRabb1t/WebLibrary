@@ -1,4 +1,4 @@
-package tdr.pet.weblibrary.model.dao;
+package tdr.pet.weblibrary.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

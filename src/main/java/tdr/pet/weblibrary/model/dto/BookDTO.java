@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tdr.pet.weblibrary.model.dao.Genre;
+import tdr.pet.weblibrary.model.entity.Genre;
 
 import java.time.LocalDateTime;
 
