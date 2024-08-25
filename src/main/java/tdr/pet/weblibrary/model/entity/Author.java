@@ -19,7 +19,12 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "email", nullable = false)
+    private String email;
+    @Column(name = "imgUrl", nullable = false)
+    private String imgUrl;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
