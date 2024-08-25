@@ -27,7 +27,7 @@ public class Book {
     private String imgUrl;
     @Column(name = "pages", nullable = false)
     private int pages;
-    @Column(name = "isbn", nullable = false)
+    @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
 
     @ManyToOne
