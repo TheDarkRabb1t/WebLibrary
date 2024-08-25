@@ -7,15 +7,17 @@ import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Book getBookByTitle(String title);
+    List<Book> getBooksByTitle(String title);
 
-    Book getBookByAuthors(Set<Author> authors);
+    List<Book> getBooksByAuthors(Set<Author> authors);
 
-    Book getBookByIsbn(String isbn);
+    Optional<Book> getBookByIsbn(String isbn);
 
-    Book getBooksByPublisher(Publisher publisher);
+    List<Book> getBooksByPublisher(Publisher publisher);
 }

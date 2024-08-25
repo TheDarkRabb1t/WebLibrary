@@ -4,11 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import tdr.pet.weblibrary.model.entity.Author;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    Author findAuthorByName(String name);
+    List<Author> findAuthorsByName(String name);
 
-    Author findAuthorByEmail(String email);
+    List<Author> findAuthorsByEmail(String email);
 
-    Author findAuthorByNameAndEmail(String name, String email);
+    Optional<Author> findAuthorByNameAndEmail(String name, String email);
 }
