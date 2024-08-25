@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/weblibrary'
+      - 'SPRING_DATASOURCE_URL=${DB_URL}'
       - 'SPRING_DATASOURCE_HIKARI_USERNAME=${DB_USERNAME}'
       - 'SPRING_DATASOURCE_HIKARI_PASSWORD=${DB_PASSWORD}'
     ports:
