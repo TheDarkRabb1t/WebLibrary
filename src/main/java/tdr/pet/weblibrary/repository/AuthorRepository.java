@@ -11,7 +11,12 @@ import java.util.Optional;
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findAuthorsByName(String name);
 
-    List<Author> findAuthorsByEmail(String email);
+    Optional<Author> findAuthorByEmail(String email);
 
     Optional<Author> findAuthorByNameAndEmail(String name, String email);
+
+    Author updateAuthorById(Long id, Author author);
+
+    void deleteAuthorById(Long id);
+
 }
