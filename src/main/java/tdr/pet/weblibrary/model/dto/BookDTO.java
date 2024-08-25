@@ -17,5 +17,6 @@ public class BookDTO {
     private int pages;
     private String isbn;
     private Genre genre;
+    private String imgUrl;
     private LocalDateTime written;
 }

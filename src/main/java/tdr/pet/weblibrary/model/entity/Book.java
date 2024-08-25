@@ -23,6 +23,8 @@ public class Book {
     private String title;
     @Column(name = "description", nullable = false)
     private String description;
+    @Column(name = "imgUrl")
+    private String imgUrl;
     @Column(name = "pages", nullable = false)
     private int pages;
     @Column(name = "isbn", nullable = false)
