@@ -4,9 +4,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface PublisherRepository extends JpaRepository<Publisher, Long> {
-    Publisher getPublisherByName(String name);
+    Optional<Publisher> getPublisherByName(String name);
 
-    Publisher getPublisherByAddress(String address);
+    List<Publisher> getPublishersByAddress(String address);
+
+    Optional<Publisher> getPublisherByNameAndAddress(String name, String address);
+
+    Publisher updatePublisherById(Long id, Publisher publisher);
+
+    void createPublisher(Publisher publisher);
+
+    void deletePublisherById(Long id);
 }

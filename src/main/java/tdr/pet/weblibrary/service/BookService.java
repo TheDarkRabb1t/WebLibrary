@@ -1,29 +1,27 @@
-package tdr.pet.weblibrary.repository;
+package tdr.pet.weblibrary.service;
 
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-@Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookService {
     List<Book> getBooksByTitle(String title);
 
     List<Book> getBooksByAuthors(Set<Author> authors);
 
-    Optional<Book> getBookByIsbn(String isbn);
+    Book getBookByISBN(String isbn);
 
     List<Book> getBooksByPublisher(Publisher publisher);
 
-    void updateBookById(Long id, Book book);
+    void createBook(Book book);
 
+    void updateBookById(Long id, Book book);
     void updateBookByIsbn(String isbn, Book book);
 
-    void deleteBookByIsbn(String isbn);
+    void deleteBookById(Long id);
+
+    void deleteBookByISBN(String isbn);
 }
