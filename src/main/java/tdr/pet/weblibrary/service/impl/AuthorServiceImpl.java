@@ -26,6 +26,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public boolean exists(String email) {
+        return authorRepository.existsByEmail(email);
+    }
+
+    @Override
     public void createNewAuthor(Author author) {
         authorRepository.save(author);
     }

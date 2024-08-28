@@ -34,6 +34,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public boolean exists(String isbn) {
+        return bookRepository.existsByIsbn(isbn);
+    }
+
+    @Override
     public List<Book> getBooksByPublisher(Publisher publisher) {
         return bookRepository.getBooksByPublisher(publisher);
     }

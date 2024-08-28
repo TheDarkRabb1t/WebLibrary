@@ -26,6 +26,11 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    public boolean exists(String name) {
+        return publisherRepository.existsByName(name);
+    }
+
+    @Override
     public void createNewPublisher(Publisher publisher) {
         publisherRepository.save(publisher);
     }

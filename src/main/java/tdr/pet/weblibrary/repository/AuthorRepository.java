@@ -13,6 +13,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     Optional<Author> findAuthorByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     Author updateAuthorById(Long id, Author author);
 
     void deleteAuthorById(Long id);
