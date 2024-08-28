@@ -10,8 +10,6 @@ public interface PublisherService {
 
     List<Publisher> getPublishersByAddress(String address);
 
-    Publisher getPublisherByNameAndAddress(String name, String address);
-
     void createNewPublisher(Publisher publisher);
 
     void updatePublisherById(Long id, Publisher publisher);
