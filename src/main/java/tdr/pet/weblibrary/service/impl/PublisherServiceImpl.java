@@ -42,16 +42,16 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void updatePublisherByName(String name, Publisher publisher) {
-        publisherRepository.updatePublisherById(getPublisherByName(name).getId(), publisher);
+        publisherRepository.updatePublisherByName(name, publisher);
     }
 
     @Override
     public void deletePublisherById(Long id) {
-        publisherRepository.deletePublisherById(id);
+        publisherRepository.deleteById(id);
     }
 
     @Override
     public void deletePublisherByName(String name) {
-        publisherRepository.deletePublisherById(getPublisherByName(name).getId());
+        publisherRepository.deletePublisherByName(name);
     }
 }

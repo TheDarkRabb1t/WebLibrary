@@ -47,11 +47,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteAuthorById(Long id) {
-        authorRepository.deleteAuthorById(id);
+        authorRepository.deleteById(id);
     }
 
     @Override
     public void deleteAuthorByEmail(String email) {
-        authorRepository.deleteAuthorById(getAuthorByEmail(email).getId());
+        authorRepository.deleteAuthorByEmail(email);
     }
 }
