@@ -3,6 +3,7 @@ package tdr.pet.weblibrary.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
+import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
 import tdr.pet.weblibrary.model.entity.Publisher;
 import tdr.pet.weblibrary.repository.PublisherRepository;
 import tdr.pet.weblibrary.service.PublisherService;
@@ -17,7 +18,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Publisher getPublisherByName(String name) {
         return publisherRepository.getPublisherByName(name)
-                .orElseThrow(() -> new AuthorNotFoundException("Publisher with this name wasn't found"));
+                .orElseThrow(() -> new PublisherNotFoundException("Publisher with this name wasn't found"));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Publisher getPublisherByNameAndAddress(String name, String address) {
         return publisherRepository.getPublisherByNameAndAddress(name, address)
-                .orElseThrow(() -> new AuthorNotFoundException("Publisher with this name and address wasn't found"));
+                .orElseThrow(() -> new PublisherNotFoundException("Publisher with this name and address wasn't found"));
     }
 
     @Override
