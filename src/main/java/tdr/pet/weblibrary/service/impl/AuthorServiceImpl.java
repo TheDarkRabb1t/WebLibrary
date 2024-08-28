@@ -26,12 +26,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author getAuthorByNameAndEmail(String name, String email) {
-        return authorRepository.findAuthorByNameAndEmail(name, email)
-                .orElseThrow(() -> new AuthorNotFoundException("Author with this email and name wasn't found"));
-    }
-
-    @Override
     public void createNewAuthor(Author author) {
 
     }

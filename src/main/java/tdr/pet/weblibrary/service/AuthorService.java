@@ -9,8 +9,6 @@ public interface AuthorService {
 
     Author getAuthorByEmail(String email);
 
-    Author getAuthorByNameAndEmail(String name, String email);
-
     void createNewAuthor(Author author);
 
     void updateAuthorById(Long id, Author author);
