@@ -18,6 +18,10 @@ public interface BookService {
 
     List<Book> getBooksByPublisher(Publisher publisher);
 
+    List<Author> findAuthorsByBookId(Long id);
+
+    List<Publisher> findPublishersByBookId(Long id);
+
     void createBook(Book book);
 
     void updateBookById(Long id, Book book);
