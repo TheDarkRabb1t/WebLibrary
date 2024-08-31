@@ -1,5 +1,6 @@
 package tdr.pet.weblibrary.model.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class BookDTO {
     private String title;
     private String description;
     private int pages;
+    @NotNull
     private String isbn;
     private Genre genre;
     private String imgUrl;
