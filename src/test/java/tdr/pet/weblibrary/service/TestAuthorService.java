@@ -132,6 +132,6 @@ class TestAuthorService {
 
         authorService.deleteAuthorByEmail(email);
 
-        verify(authorRepository, times(1)).deleteById(id);
+        verify(authorRepository, times(1)).deleteAuthorByEmail(email);
     }
 }
