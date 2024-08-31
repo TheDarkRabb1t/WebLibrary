@@ -17,5 +17,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     Author updateAuthorById(Long id, Author author);
 
+    Author updateAuthorByEmail(String email, Author author);
+
     void deleteAuthorByEmail(String email);
 }

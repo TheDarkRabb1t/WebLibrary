@@ -37,21 +37,37 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void updatePublisherById(Long id, Publisher publisher) {
-        publisherRepository.updatePublisherById(id, publisher);
+        if (publisherRepository.existsById(id)) {
+            publisherRepository.updatePublisherById(id, publisher);
+        } else {
+            throw new PublisherNotFoundException();
+        }
     }
 
     @Override
     public void updatePublisherByName(String name, Publisher publisher) {
-        publisherRepository.updatePublisherByName(name, publisher);
+        if (publisherRepository.existsByName(name)) {
+            publisherRepository.updatePublisherByName(name, publisher);
+        } else {
+            throw new PublisherNotFoundException();
+        }
     }
 
     @Override
     public void deletePublisherById(Long id) {
-        publisherRepository.deleteById(id);
+        if (publisherRepository.existsById((id))) {
+            publisherRepository.deleteById(id);
+        } else {
+            throw new PublisherNotFoundException();
+        }
     }
 
     @Override
     public void deletePublisherByName(String name) {
-        publisherRepository.deletePublisherByName(name);
+        if (publisherRepository.existsByName(name)) {
+            publisherRepository.deletePublisherByName(name);
+        } else {
+            throw new PublisherNotFoundException();
+        }
     }
 }
