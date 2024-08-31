@@ -26,27 +26,48 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void createNewAuthor(Author author) {
+    public boolean exists(String email) {
+        return authorRepository.existsByEmail(email);
+    }
 
+    @Override
+    public void createNewAuthor(Author author) {
+        authorRepository.save(author);
     }
 
     @Override
     public void updateAuthorById(Long id, Author author) {
-        authorRepository.updateAuthorById(id, author);
+        if (authorRepository.existsById(id)) {
+            authorRepository.updateAuthorById(id, author);
+        } else {
+            throw new AuthorNotFoundException();
+        }
     }
 
     @Override
     public void updateAuthorByEmail(String email, Author author) {
-        authorRepository.updateAuthorById(getAuthorByEmail(email).getId(), author);
+        if (authorRepository.existsByEmail(email)) {
+            authorRepository.updateAuthorByEmail(email, author);
+        } else {
+            throw new AuthorNotFoundException();
+        }
     }
 
     @Override
     public void deleteAuthorById(Long id) {
-        authorRepository.deleteAuthorById(id);
+        if (authorRepository.existsById(id)) {
+            authorRepository.deleteById(id);
+        } else {
+            throw new AuthorNotFoundException();
+        }
     }
 
     @Override
     public void deleteAuthorByEmail(String email) {
-        authorRepository.deleteAuthorById(getAuthorByEmail(email).getId());
+        if (authorRepository.existsByEmail(email)) {
+            authorRepository.deleteAuthorByEmail(email);
+        } else {
+            throw new AuthorNotFoundException();
+        }
     }
 }

@@ -10,15 +10,22 @@ import java.util.Set;
 public interface BookService {
     List<Book> getBooksByTitle(String title);
 
-    List<Book> getBooksByAuthors(Set<Author> authors);
-
     Book getBookByISBN(String isbn);
 
+    boolean exists(String isbn);
+
+    List<Book> getBooksByAuthors(Set<Author> authors);
+
     List<Book> getBooksByPublisher(Publisher publisher);
+
+    List<Author> findAuthorsByBookId(Long id);
+
+    List<Publisher> findPublishersByBookId(Long id);
 
     void createBook(Book book);
 
     void updateBookById(Long id, Book book);
+
     void updateBookByIsbn(String isbn, Book book);
 
     void deleteBookById(Long id);

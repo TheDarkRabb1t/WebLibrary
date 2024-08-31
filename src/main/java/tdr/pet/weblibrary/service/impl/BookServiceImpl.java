@@ -34,8 +34,23 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public boolean exists(String isbn) {
+        return bookRepository.existsByIsbn(isbn);
+    }
+
+    @Override
     public List<Book> getBooksByPublisher(Publisher publisher) {
         return bookRepository.getBooksByPublisher(publisher);
+    }
+
+    @Override
+    public List<Author> findAuthorsByBookId(Long id) {
+        return bookRepository.findAuthorsByBookId(id);
+    }
+
+    @Override
+    public List<Publisher> findPublishersByBookId(Long id) {
+        return bookRepository.findPublishersByBookId(id);
     }
 
     @Override
@@ -45,21 +60,37 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void updateBookById(Long id, Book book) {
-        bookRepository.updateBookById(id, book);
+        if (bookRepository.existsById(id)) {
+            bookRepository.updateBookById(id, book);
+        } else {
+            throw new BookNotFoundException();
+        }
     }
 
     @Override
     public void updateBookByIsbn(String isbn, Book book) {
-        bookRepository.updateBookByIsbn(isbn, book);
+        if (bookRepository.existsByIsbn(isbn)) {
+            bookRepository.updateBookByIsbn(isbn, book);
+        } else {
+            throw new BookNotFoundException();
+        }
     }
 
     @Override
     public void deleteBookById(Long id) {
-        bookRepository.deleteById(id);
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+        } else {
+            throw new BookNotFoundException();
+        }
     }
 
     @Override
     public void deleteBookByISBN(String isbn) {
-        bookRepository.deleteBookByIsbn(isbn);
+        if (bookRepository.existsByIsbn(isbn)) {
+            bookRepository.deleteBookByIsbn(isbn);
+        } else {
+            throw new BookNotFoundException();
+        }
     }
 }

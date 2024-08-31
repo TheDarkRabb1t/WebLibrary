@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookDTO {
     private String title;
+    private String description;
     private int pages;
     private String isbn;
     private Genre genre;

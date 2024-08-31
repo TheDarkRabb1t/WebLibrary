@@ -13,11 +13,10 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
 
     List<Publisher> getPublishersByAddress(String address);
 
-    Optional<Publisher> getPublisherByNameAndAddress(String name, String address);
+    boolean existsByName(String name);
 
-    Publisher updatePublisherById(Long id, Publisher publisher);
+    void updatePublisherById(Long id, Publisher publisher);
+    void updatePublisherByName(String name, Publisher publisher);
 
-    void createPublisher(Publisher publisher);
-
-    void deletePublisherById(Long id);
+    void deletePublisherByName(String name);
 }
