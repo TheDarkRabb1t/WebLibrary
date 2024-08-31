@@ -86,6 +86,7 @@ class TestPublisherService {
         Publisher publisher = new Publisher();
         publisher.setName("Penguin Books");
         publisher.setAddress("123 st");
+        when(publisherRepository.existsById(id)).thenReturn(true);
 
         publisherService.updatePublisherById(id, publisher);
 
@@ -97,6 +98,7 @@ class TestPublisherService {
         String name = "Penguin Books";
         Publisher publisher = new Publisher();
         publisher.setAddress("123 st");
+        when(publisherRepository.existsByName(name)).thenReturn(true);
 
         publisherService.updatePublisherByName(name, publisher);
 
@@ -106,6 +108,7 @@ class TestPublisherService {
     @Test
     void deletePublisherById() {
         Long id = 1L;
+        when(publisherRepository.existsById(id)).thenReturn(true);
 
         publisherService.deletePublisherById(id);
 

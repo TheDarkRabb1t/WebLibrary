@@ -86,7 +86,7 @@ class TestAuthorService {
         author.setName("John Doe");
         author.setEmail("john.doe@example.com");
 
-        when(authorRepository.findById(id)).thenReturn(Optional.of(author));
+        when(authorRepository.existsById(id)).thenReturn(true);
 
         authorService.updateAuthorById(id, author);
 
@@ -104,16 +104,18 @@ class TestAuthorService {
         Author updatedAuthor = new Author();
         updatedAuthor.setName("John Doe");
 
-        when(authorRepository.findAuthorByEmail(email)).thenReturn(Optional.of(existingAuthor));
+        when(authorRepository.existsByEmail(email)).thenReturn(true);
 
         authorService.updateAuthorByEmail(email, updatedAuthor);
 
-        verify(authorRepository, times(1)).updateAuthorById(id, updatedAuthor);
+        verify(authorRepository, times(1)).updateAuthorByEmail(email, updatedAuthor);
     }
 
     @Test
     void deleteAuthorById() {
         Long id = 1L;
+
+        when(authorRepository.existsById(id)).thenReturn(true);
 
         authorService.deleteAuthorById(id);
 
@@ -128,7 +130,7 @@ class TestAuthorService {
         author.setId(id);
         author.setEmail(email);
 
-        when(authorRepository.findAuthorByEmail(email)).thenReturn(Optional.of(author));
+        when(authorRepository.existsByEmail(email)).thenReturn(true);
 
         authorService.deleteAuthorByEmail(email);
 
