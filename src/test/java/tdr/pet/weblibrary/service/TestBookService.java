@@ -71,6 +71,16 @@ class TestBookService {
         assertTrue(books.contains(book));
         verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
     }
+    @Test
+    void testFindBooksByIsbn_emptyList() {
+        when(bookRepository.findBooksByIsbn("1234567890")).thenReturn(Set.of());
+
+        Set<Book> books = bookServiceImpl.findBooksByIsbn("1234567890");
+
+        assertNotNull(books);
+        assertEquals(0, books.size());
+        verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
+    }
 
     @Test
     void testExists() {
