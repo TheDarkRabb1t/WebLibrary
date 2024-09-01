@@ -10,7 +10,7 @@ import tdr.pet.weblibrary.repository.AuthorRepository;
 import tdr.pet.weblibrary.service.impl.AuthorServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,121 +19,100 @@ class TestAuthorService {
 
     @Mock
     private AuthorRepository authorRepository;
+
     @InjectMocks
-    private AuthorServiceImpl authorService;
+    private AuthorServiceImpl authorServiceImpl;
+
+    private Author author;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        author = new Author();
+        author.setId(1L);
+        author.setEmail("author@example.com");
+        author.setName("John Doe");
     }
 
     @Test
-    void testGetAuthorsByName() {
-        Author author1 = new Author();
-        author1.setName("John First");
+    void testFindAuthorsByName() {
+        when(authorRepository.findAuthorsByName("John Doe")).thenReturn(List.of(author));
 
-        Author author2 = new Author();
-        author2.setName("John Second");
+        List<Author> authors = authorServiceImpl.findAuthorsByName("John Doe");
 
-        when(authorRepository.findAuthorsByName("John")).thenReturn(List.of(author1, author2));
-
-        List<Author> results = authorService.getAuthorsByName("John");
-        assertFalse(results.isEmpty());
-        assertEquals(2, results.size());
-        assertEquals("John First", results.get(0).getName());
+        assertNotNull(authors);
+        assertEquals(1, authors.size());
+        assertEquals(author.getName(), authors.get(0).getName());
+        verify(authorRepository, times(1)).findAuthorsByName("John Doe");
     }
 
     @Test
-    void getAuthorByEmail() {
-        String email = "john.doe@example.com";
-        Author author = new Author();
-        author.setEmail(email);
-        when(authorRepository.findAuthorByEmail(email)).thenReturn(Optional.of(author));
+    void testFindAuthorsByEmail() {
+        when(authorRepository.findAuthorsByEmail("author@example.com")).thenReturn(Set.of(author));
 
-        Author result = authorService.getAuthorByEmail(email);
+        Set<Author> authors = authorServiceImpl.findAuthorsByEmail("author@example.com");
 
-        assertNotNull(result);
-        assertEquals(email, result.getEmail());
-        verify(authorRepository, times(1)).findAuthorByEmail(email);
+        assertNotNull(authors);
+        assertEquals(1, authors.size());
+        assertTrue(authors.contains(author));
+        verify(authorRepository, times(1)).findAuthorsByEmail("author@example.com");
     }
 
     @Test
-    void exists() {
-        String email = "john.doe@example.com";
-        when(authorRepository.existsByEmail(email)).thenReturn(true);
+    void testExists() {
+        when(authorRepository.existsByEmail("author@example.com")).thenReturn(true);
 
-        boolean exists = authorService.exists(email);
+        boolean exists = authorServiceImpl.exists("author@example.com");
 
         assertTrue(exists);
-        verify(authorRepository, times(1)).existsByEmail(email);
+        verify(authorRepository, times(1)).existsByEmail("author@example.com");
     }
 
     @Test
-    void createNewAuthor() {
-        Author author = new Author();
-        author.setName("John Doe");
-        author.setEmail("john.doe@example.com");
+    void testCreateNewAuthor() {
+        when(authorRepository.save(any(Author.class))).thenReturn(author);
 
-        authorService.createNewAuthor(author);
+        authorServiceImpl.createNewAuthor(author);
 
         verify(authorRepository, times(1)).save(author);
     }
 
     @Test
-    void updateAuthorById() {
-        Long id = 1L;
-        Author author = new Author();
-        author.setName("John Doe");
-        author.setEmail("john.doe@example.com");
+    void testUpdateAuthorById() {
+        when(authorRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(authorRepository).updateAuthorById(1L, author);
 
-        when(authorRepository.existsById(id)).thenReturn(true);
+        authorServiceImpl.updateAuthorById(1L, author);
 
-        authorService.updateAuthorById(id, author);
-
-        verify(authorRepository, times(1)).updateAuthorById(id, author);
+        verify(authorRepository, times(1)).updateAuthorById(1L, author);
     }
 
     @Test
-    void updateAuthorByEmail() {
-        Long id = 1L;
-        String email = "john.doe@example.com";
-        Author existingAuthor = new Author();
-        existingAuthor.setId(id);
-        existingAuthor.setEmail(email);
+    void testUpdateAuthorByEmail() {
+        when(authorRepository.existsByEmail("author@example.com")).thenReturn(true);
+        doNothing().when(authorRepository).updateAuthorByEmail("author@example.com", author);
+        authorServiceImpl.updateAuthorByEmail("author@example.com", author);
 
-        Author updatedAuthor = new Author();
-        updatedAuthor.setName("John Doe");
-
-        when(authorRepository.existsByEmail(email)).thenReturn(true);
-
-        authorService.updateAuthorByEmail(email, updatedAuthor);
-
-        verify(authorRepository, times(1)).updateAuthorByEmail(email, updatedAuthor);
+        verify(authorRepository, times(1)).updateAuthorByEmail("author@example.com", author);
     }
 
     @Test
-    void deleteAuthorById() {
-        Long id = 1L;
+    void testDeleteAuthorById() {
+        when(authorRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(authorRepository).deleteById(1L);
 
-        when(authorRepository.existsById(id)).thenReturn(true);
+        authorServiceImpl.deleteAuthorById(1L);
 
-        authorService.deleteAuthorById(id);
-
-        verify(authorRepository, times(1)).deleteById(id);
+        verify(authorRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    void deleteAuthorByEmail() {
-        Long id = 1L;
-        String email = "john.doe@example.com";
-        Author author = new Author();
-        author.setId(id);
-        author.setEmail(email);
+    void testDeleteAuthorByEmail() {
+        when(authorRepository.existsByEmail("author@example.com")).thenReturn(true);
+        doNothing().when(authorRepository).deleteAuthorByEmail("author@example.com");
 
-        when(authorRepository.existsByEmail(email)).thenReturn(true);
+        authorServiceImpl.deleteAuthorByEmail("author@example.com");
 
-        authorService.deleteAuthorByEmail(email);
-
-        verify(authorRepository, times(1)).deleteAuthorByEmail(email);
+        verify(authorRepository, times(1)).deleteAuthorByEmail("author@example.com");
     }
 }

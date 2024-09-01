@@ -8,6 +8,7 @@ import tdr.pet.weblibrary.repository.AuthorRepository;
 import tdr.pet.weblibrary.service.AuthorService;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -15,14 +16,13 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
     @Override
-    public List<Author> getAuthorsByName(String name) {
+    public List<Author> findAuthorsByName(String name) {
         return authorRepository.findAuthorsByName(name);
     }
 
     @Override
-    public Author getAuthorByEmail(String email) {
-        return authorRepository.findAuthorByEmail(email)
-                .orElseThrow(() -> new AuthorNotFoundException("Author with this email wasn't found"));
+    public Set<Author> findAuthorsByEmail(String email) {
+        return authorRepository.findAuthorsByEmail(email);
     }
 
     @Override

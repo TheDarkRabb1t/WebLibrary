@@ -16,7 +16,7 @@ import java.util.Set;
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> getBooksByTitle(String title);
 
-    Optional<Book> getBookByIsbn(String isbn);
+    Set<Book> findBooksByIsbn(String isbn);
 
     boolean existsByIsbn(String isbn);
 
@@ -29,11 +29,25 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Author> findAuthorsByBookId(Long id);
 
     @Query("""
+            select distinct a
+            from authors as a
+            join a.books as b
+            where b.isbn like %:isbn%""")
+    List<Author> findAuthorsByBookIsbn(String isbn);
+
+    @Query("""
             select p.*
             from publishers as p
                      join books as b on p.id = b.publisher_id
             where b.id = :book_id""")
-    List<Publisher> findPublishersByBookId(Long id);
+    Publisher findPublisherByBookId(Long id);
+
+    @Query("""
+            select p
+            from publishers as p
+            join p.books as b
+            where b.isbn like %:isbn%""")
+    Optional<Publisher> findPublisherByBookIsbn(String isbn);
 
     List<Book> getBooksByAuthors(Set<Author> authors);
 

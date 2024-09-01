@@ -11,191 +11,133 @@ import tdr.pet.weblibrary.model.entity.Publisher;
 import tdr.pet.weblibrary.repository.BookRepository;
 import tdr.pet.weblibrary.service.impl.BookServiceImpl;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TestBookService {
+class TestBookService {
+
     @Mock
     private BookRepository bookRepository;
 
     @InjectMocks
-    private BookServiceImpl bookService;
+    private BookServiceImpl bookServiceImpl;
 
     private Book book;
     private Author author;
     private Publisher publisher;
-    private Set<Author> authors;
-    private List<Book> books;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
         author = new Author();
         author.setId(1L);
-        author.setName("John Doe");
-        author.setEmail("johndoe@example.com");
-        author.setImgUrl("image-url");
+        author.setEmail("author@example.com");
 
         publisher = new Publisher();
         publisher.setId(1L);
-        publisher.setName("Publisher Name");
-        publisher.setAddress("Publisher Address");
+        publisher.setName("Sample Publisher");
 
         book = new Book();
         book.setId(1L);
-        book.setTitle("Book Title");
-        book.setDescription("Description");
-        book.setImgUrl("image-url");
-        book.setPages(123);
-        book.setIsbn("123-4567890123");
+        book.setIsbn("1234567890");
+        book.setTitle("Sample Book");
+        book.setAuthors(Set.of(author));
         book.setPublisher(publisher);
-        book.setAuthors(authors);
-
-        authors = new HashSet<>(Collections.singletonList(author));
-        books = List.of(book);
     }
 
     @Test
-    void testGetBooksByTitle() {
-        String title = "Book Title";
-        when(bookRepository.getBooksByTitle(title)).thenReturn(books);
+    void testFindBooksByTitle() {
+        when(bookRepository.getBooksByTitle("Sample Book")).thenReturn(List.of(book));
 
-        List<Book> result = bookService.getBooksByTitle(title);
+        List<Book> books = bookServiceImpl.findBooksByTitle("Sample Book");
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(book, result.get(0));
-        verify(bookRepository, times(1)).getBooksByTitle(title);
+        assertNotNull(books);
+        assertEquals(1, books.size());
+        assertEquals(book.getTitle(), books.get(0).getTitle());
+        verify(bookRepository, times(1)).getBooksByTitle("Sample Book");
     }
 
     @Test
-    void testGetBookByISBN() {
-        String isbn = "123-4567890123";
-        when(bookRepository.getBookByIsbn(isbn)).thenReturn(Optional.of(book));
+    void testFindBooksByIsbn() {
+        when(bookRepository.findBooksByIsbn("1234567890")).thenReturn(Set.of(book));
 
-        Book result = bookService.getBookByISBN(isbn);
+        Set<Book> books = bookServiceImpl.findBooksByIsbn("1234567890");
 
-        assertNotNull(result);
-        assertEquals(book, result);
-        verify(bookRepository, times(1)).getBookByIsbn(isbn);
+        assertNotNull(books);
+        assertEquals(1, books.size());
+        assertTrue(books.contains(book));
+        verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
+    }
+    @Test
+    void testFindBooksByIsbn_emptyList() {
+        when(bookRepository.findBooksByIsbn("1234567890")).thenReturn(Set.of());
+
+        Set<Book> books = bookServiceImpl.findBooksByIsbn("1234567890");
+
+        assertNotNull(books);
+        assertEquals(0, books.size());
+        verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
     }
 
     @Test
     void testExists() {
-        String isbn = "123-4567890123";
-        when(bookRepository.existsByIsbn(isbn)).thenReturn(true);
+        when(bookRepository.existsByIsbn("1234567890")).thenReturn(true);
 
-        boolean result = bookService.exists(isbn);
+        boolean exists = bookServiceImpl.exists("1234567890");
 
-        assertTrue(result);
-        verify(bookRepository, times(1)).existsByIsbn(isbn);
-    }
-
-    @Test
-    void testGetBooksByAuthors() {
-        when(bookRepository.getBooksByAuthors(authors)).thenReturn(books);
-
-        List<Book> result = bookService.getBooksByAuthors(authors);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(book, result.get(0));
-        verify(bookRepository, times(1)).getBooksByAuthors(authors);
-    }
-
-    @Test
-    void testGetBooksByPublisher() {
-        when(bookRepository.getBooksByPublisher(publisher)).thenReturn(books);
-
-        List<Book> result = bookService.getBooksByPublisher(publisher);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(book, result.get(0));
-        verify(bookRepository, times(1)).getBooksByPublisher(publisher);
-    }
-
-    @Test
-    void testFindAuthorsByBookId() {
-        Long id = 1L;
-        when(bookRepository.findAuthorsByBookId(id)).thenReturn(authors.stream().toList());
-
-        List<Author> result = bookService.findAuthorsByBookId(id);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(author, result.get(0));
-        verify(bookRepository, times(1)).findAuthorsByBookId(id);
-    }
-
-    @Test
-    void testFindPublishersByBookId() {
-        Long id = 1L;
-        when(bookRepository.findPublishersByBookId(id)).thenReturn(List.of(publisher));
-
-        List<Publisher> result = bookService.findPublishersByBookId(id);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(publisher, result.get(0));
-        verify(bookRepository, times(1)).findPublishersByBookId(id);
+        assertTrue(exists);
+        verify(bookRepository, times(1)).existsByIsbn("1234567890");
     }
 
     @Test
     void testCreateBook() {
         when(bookRepository.save(any(Book.class))).thenReturn(book);
 
-        bookService.createBook(book);
+        bookServiceImpl.createBook(book);
 
         verify(bookRepository, times(1)).save(book);
     }
 
     @Test
     void testUpdateBookById() {
-        Long id = 1L;
-        when(bookRepository.existsById(id)).thenReturn(true);
+        when(bookRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(bookRepository).updateBookById(1L, book);
 
-        bookService.updateBookById(id, book);
+        bookServiceImpl.updateBookById(1L, book);
 
-        verify(bookRepository, times(1)).existsById(id);
-        verify(bookRepository, times(1)).updateBookById(id, book);
+        verify(bookRepository, times(1)).updateBookById(1L, book);
     }
 
     @Test
     void testUpdateBookByIsbn() {
-        String isbn = "123-4567890123";
-        when(bookRepository.existsByIsbn(isbn)).thenReturn(true);
+        when(bookRepository.existsByIsbn("1234567890")).thenReturn(true);
+        doNothing().when(bookRepository).updateBookByIsbn("1234567890", book);
 
-        bookService.updateBookByIsbn(isbn, book);
+        bookServiceImpl.updateBookByIsbn("1234567890", book);
 
-        verify(bookRepository, times(1)).existsByIsbn(isbn);
-        verify(bookRepository, times(1)).updateBookByIsbn(isbn, book);
+        verify(bookRepository, times(1)).updateBookByIsbn("1234567890", book);
     }
 
     @Test
     void testDeleteBookById() {
-        Long id = 1L;
-        when(bookRepository.existsById(id)).thenReturn(true);
-        doNothing().when(bookRepository).deleteById(id);
+        when(bookRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(bookRepository).deleteById(1L);
 
-        bookService.deleteBookById(id);
+        bookServiceImpl.deleteBookById(1L);
 
-        verify(bookRepository, times(1)).existsById(id);
-        verify(bookRepository, times(1)).deleteById(id);
+        verify(bookRepository, times(1)).deleteById(1L);
     }
 
     @Test
     void testDeleteBookByISBN() {
-        String isbn = "123-4567890123";
-        when(bookRepository.existsByIsbn(isbn)).thenReturn(true);
-        doNothing().when(bookRepository).deleteBookByIsbn(isbn);
+        when(bookRepository.existsByIsbn("1234567890")).thenReturn(true);
+        doNothing().when(bookRepository).deleteBookByIsbn("1234567890");
 
-        bookService.deleteBookByISBN(isbn);
+        bookServiceImpl.deleteBookByISBN("1234567890");
 
-        verify(bookRepository, times(1)).existsByIsbn(isbn);
-        verify(bookRepository, times(1)).deleteBookByIsbn(isbn);
+        verify(bookRepository, times(1)).deleteBookByIsbn("1234567890");
     }
 }

@@ -6,10 +6,11 @@ import tdr.pet.weblibrary.model.entity.Publisher;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface PublisherRepository extends JpaRepository<Publisher, Long> {
-    Optional<Publisher> getPublisherByName(String name);
+    Set<Publisher> findPublishersByName(String name);
 
     List<Publisher> getPublishersByAddress(String address);
 

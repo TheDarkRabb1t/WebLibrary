@@ -3,6 +3,7 @@ package tdr.pet.weblibrary.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.book.BookNotFoundException;
+import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
@@ -18,19 +19,18 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public List<Book> getBooksByTitle(String title) {
+    public List<Book> findBooksByTitle(String title) {
         return bookRepository.getBooksByTitle(title);
     }
 
     @Override
-    public List<Book> getBooksByAuthors(Set<Author> authors) {
+    public List<Book> findBooksByAuthors(Set<Author> authors) {
         return bookRepository.getBooksByAuthors(authors);
     }
 
     @Override
-    public Book getBookByISBN(String isbn) {
-        return bookRepository.getBookByIsbn(isbn)
-                .orElseThrow(() -> new BookNotFoundException("Book with given isbn wasn't found"));
+    public Set<Book> findBooksByIsbn(String isbn) {
+        return bookRepository.findBooksByIsbn(isbn);
     }
 
     @Override
@@ -39,8 +39,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPublisher(Publisher publisher) {
+    public List<Book> findBooksByPublishers(Publisher publisher) {
         return bookRepository.getBooksByPublisher(publisher);
+    }
+
+    @Override
+    public List<Author> findAuthorsByBookIsbn(String isbn) {
+        return bookRepository.findAuthorsByBookIsbn(isbn);
     }
 
     @Override
@@ -49,8 +54,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Publisher> findPublishersByBookId(Long id) {
-        return bookRepository.findPublishersByBookId(id);
+    public Publisher findPublisherByBookIsbn(String isbn) {
+        return bookRepository.findPublisherByBookIsbn(isbn)
+                .orElseThrow(() -> new PublisherNotFoundException("Publisher with this book's isbn not found"));
+    }
+
+    @Override
+    public Publisher findPublisherByBookId(Long id) {
+        return bookRepository.findPublisherByBookId(id);
     }
 
     @Override

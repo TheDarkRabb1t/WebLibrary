@@ -3,12 +3,13 @@ package tdr.pet.weblibrary.service;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PublisherService {
 
-    Publisher getPublisherByName(String name);
+    Set<Publisher> findPublishersByName(String name);
 
-    List<Publisher> getPublishersByAddress(String address);
+    List<Publisher> findPublishersByAddress(String address);
 
     boolean exists(String name);
 
