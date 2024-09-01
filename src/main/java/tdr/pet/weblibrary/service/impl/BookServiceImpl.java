@@ -48,8 +48,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Publisher> findPublishersByBookId(Long id) {
-        return bookRepository.findPublishersByBookId(id);
+    public Publisher findPublisherByBookId(Long id) {
+        return bookRepository.findPublisherByBookId(id);
     }
 
     @Override

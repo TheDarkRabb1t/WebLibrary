@@ -33,7 +33,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             from publishers as p
                      join books as b on p.id = b.publisher_id
             where b.id = :book_id""")
-    List<Publisher> findPublishersByBookId(Long id);
+    Publisher findPublisherByBookId(Long id);
 
     List<Book> getBooksByAuthors(Set<Author> authors);
 

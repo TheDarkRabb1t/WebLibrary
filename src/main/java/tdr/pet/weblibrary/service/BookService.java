@@ -20,7 +20,7 @@ public interface BookService {
 
     List<Author> findAuthorsByBookId(Long id);
 
-    List<Publisher> findPublishersByBookId(Long id);
+    Publisher findPublisherByBookId(Long id);
 
     void createBook(Book book);
 
