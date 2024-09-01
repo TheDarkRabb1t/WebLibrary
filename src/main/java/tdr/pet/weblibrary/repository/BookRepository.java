@@ -16,7 +16,7 @@ import java.util.Set;
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> getBooksByTitle(String title);
 
-    Optional<Book> getBookByIsbn(String isbn);
+    Set<Book> findBooksByIsbn(String isbn);
 
     boolean existsByIsbn(String isbn);
 

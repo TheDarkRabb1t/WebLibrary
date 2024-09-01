@@ -7,7 +7,10 @@ import tdr.pet.weblibrary.model.entity.Publisher;
 import tdr.pet.weblibrary.repository.PublisherRepository;
 import tdr.pet.weblibrary.service.PublisherService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -15,9 +18,8 @@ public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
 
     @Override
-    public Publisher findPublisherByName(String name) {
-        return publisherRepository.getPublisherByName(name)
-                .orElseThrow(() -> new PublisherNotFoundException("Publisher with this name wasn't found"));
+    public Set<Publisher> findPublishersByName(String name) {
+        return new HashSet<>(publisherRepository.findPublishersByName(name));
     }
 
     @Override

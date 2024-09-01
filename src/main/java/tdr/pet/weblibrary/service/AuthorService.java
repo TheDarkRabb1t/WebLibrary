@@ -3,11 +3,12 @@ package tdr.pet.weblibrary.service;
 import tdr.pet.weblibrary.model.entity.Author;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AuthorService {
     List<Author> findAuthorsByName(String name);
 
-    Author findAuthorByName(String email);
+    Set<Author> findAuthorsByEmail(String email);
 
     boolean exists(String email);
 

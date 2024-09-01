@@ -10,7 +10,7 @@ import java.util.Set;
 public interface BookService {
     List<Book> findBooksByTitle(String title);
 
-    Book findBooksByIsbn(String isbn);
+    Set<Book> findBooksByIsbn(String isbn);
 
     boolean exists(String isbn);
 

@@ -6,12 +6,13 @@ import tdr.pet.weblibrary.model.entity.Author;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findAuthorsByName(String name);
 
-    Optional<Author> findAuthorByEmail(String email);
+    Set<Author> findAuthorsByEmail(String email);
 
     boolean existsByEmail(String email);
 
