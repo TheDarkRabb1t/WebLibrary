@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController("/api/v1/author")
+@RestController()
+@RequestMapping("/api/v1/author")
 @AllArgsConstructor
 public class RestAuthorController {
     private final AuthorService authorService;

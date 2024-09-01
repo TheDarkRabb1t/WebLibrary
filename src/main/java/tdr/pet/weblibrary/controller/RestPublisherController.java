@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController("/api/v1/publisher")
+@RestController
 @AllArgsConstructor
+@RequestMapping("/api/v1/publisher")
 public class RestPublisherController {
     private final PublisherService publisherService;
     private final PublisherMapper publisherMapper;
