@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/api/v1/book")
 public class RestBookController {
     private final BookService bookService;
     private final PublisherService publisherService;

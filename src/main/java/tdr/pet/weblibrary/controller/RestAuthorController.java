@@ -10,7 +10,7 @@ import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.mapper.AuthorMapper;
 import tdr.pet.weblibrary.service.AuthorService;
 
-@RestController("/author")
+@RestController("/api/v1/author")
 @AllArgsConstructor
 public class RestAuthorController {
     private final AuthorService authorService;

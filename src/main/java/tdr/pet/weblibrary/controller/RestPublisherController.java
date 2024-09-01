@@ -10,7 +10,7 @@ import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.mapper.PublisherMapper;
 import tdr.pet.weblibrary.service.PublisherService;
 
-@RestController("/publisher")
+@RestController("/api/v1/publisher")
 @AllArgsConstructor
 public class RestPublisherController {
     private final PublisherService publisherService;
