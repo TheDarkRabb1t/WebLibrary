@@ -9,9 +9,8 @@ import tdr.pet.weblibrary.model.entity.Publisher;
 import tdr.pet.weblibrary.repository.PublisherRepository;
 import tdr.pet.weblibrary.service.impl.PublisherServiceImpl;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,96 +21,100 @@ class TestPublisherService {
     private PublisherRepository publisherRepository;
 
     @InjectMocks
-    private PublisherServiceImpl publisherService;
+    private PublisherServiceImpl publisherServiceImpl;
+
+    private Publisher publisher;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        publisher = new Publisher();
+        publisher.setId(1L);
+        publisher.setName("Sample Publisher");
+        publisher.setAddress("123 Main St");
     }
 
     @Test
-    void getPublisherByName() {
-        String name = "Penguin Books";
-        Publisher publisher = new Publisher();
-        publisher.setName(name);
-        when(publisherRepository.getPublisherByName(name)).thenReturn(Optional.of(publisher));
+    void testFindPublishersByName() {
+        when(publisherRepository.findPublishersByName("Sample Publisher")).thenReturn(Set.of(publisher));
 
-        Publisher result = publisherService.findPublisherByName(name);
-
-        assertNotNull(result);
-        assertEquals(name, result.getName());
-        verify(publisherRepository, times(1)).getPublisherByName(name);
-    }
-
-    @Test
-    void getPublishersByAddress() {
-        String address = "123 st";
-        Publisher publisher = new Publisher();
-        publisher.setAddress(address);
-        when(publisherRepository.getPublishersByAddress(address)).thenReturn(Collections.singletonList(publisher));
-
-        List<Publisher> publishers = publisherService.findPublishersByAddress(address);
+        Set<Publisher> publishers = publisherServiceImpl.findPublishersByName("Sample Publisher");
 
         assertNotNull(publishers);
         assertEquals(1, publishers.size());
-        assertEquals(address, publishers.get(0).getAddress());
-        verify(publisherRepository, times(1)).getPublishersByAddress(address);
+        assertTrue(publishers.contains(publisher));
+        verify(publisherRepository, times(1)).findPublishersByName("Sample Publisher");
     }
 
     @Test
-    void exists() {
-        String name = "Penguin Books";
-        when(publisherRepository.existsByName(name)).thenReturn(true);
+    void testFindPublishersByAddress() {
+        when(publisherRepository.getPublishersByAddress("123 Main St")).thenReturn(List.of(publisher));
 
-        boolean exists = publisherService.exists(name);
+        List<Publisher> publishers = publisherServiceImpl.findPublishersByAddress("123 Main St");
+
+        assertNotNull(publishers);
+        assertEquals(1, publishers.size());
+        assertEquals(publisher.getAddress(), publishers.get(0).getAddress());
+        verify(publisherRepository, times(1)).getPublishersByAddress("123 Main St");
+    }
+
+    @Test
+    void testExists() {
+        when(publisherRepository.existsByName("Sample Publisher")).thenReturn(true);
+
+        boolean exists = publisherServiceImpl.exists("Sample Publisher");
 
         assertTrue(exists);
-        verify(publisherRepository, times(1)).existsByName(name);
+        verify(publisherRepository, times(1)).existsByName("Sample Publisher");
     }
 
     @Test
-    void createNewPublisher() {
-        Publisher publisher = new Publisher();
-        publisher.setName("Penguin Books");
-        publisher.setAddress("123 st");
+    void testCreateNewPublisher() {
+        when(publisherRepository.save(any(Publisher.class))).thenReturn(publisher);
 
-        publisherService.createNewPublisher(publisher);
+        publisherServiceImpl.createNewPublisher(publisher);
 
         verify(publisherRepository, times(1)).save(publisher);
     }
 
     @Test
-    void updatePublisherById() {
-        Long id = 1L;
-        Publisher publisher = new Publisher();
-        publisher.setName("Penguin Books");
-        publisher.setAddress("123 st");
-        when(publisherRepository.existsById(id)).thenReturn(true);
+    void testUpdatePublisherById() {
+        when(publisherRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(publisherRepository).updatePublisherById(1L, publisher);
 
-        publisherService.updatePublisherById(id, publisher);
 
-        verify(publisherRepository, times(1)).updatePublisherById(id, publisher);
+        publisherServiceImpl.updatePublisherById(1L, publisher);
+
+        verify(publisherRepository, times(1)).updatePublisherById(1L, publisher);
     }
 
     @Test
-    void updatePublisherByName() {
-        String name = "Penguin Books";
-        Publisher publisher = new Publisher();
-        publisher.setAddress("123 st");
-        when(publisherRepository.existsByName(name)).thenReturn(true);
+    void testUpdatePublisherByName() {
+        when(publisherRepository.existsByName("Sample Publisher")).thenReturn(true);
+        doNothing().when(publisherRepository).updatePublisherByName("Sample Publisher", publisher);
 
-        publisherService.updatePublisherByName(name, publisher);
+        publisherServiceImpl.updatePublisherByName("Sample Publisher", publisher);
 
-        verify(publisherRepository, times(1)).updatePublisherByName(name, publisher);
+        verify(publisherRepository, times(1)).updatePublisherByName("Sample Publisher", publisher);
     }
 
     @Test
-    void deletePublisherById() {
-        Long id = 1L;
-        when(publisherRepository.existsById(id)).thenReturn(true);
+    void testDeletePublisherById() {
+        when(publisherRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(publisherRepository).deleteById(1L);
 
-        publisherService.deletePublisherById(id);
+        publisherServiceImpl.deletePublisherById(1L);
 
-        verify(publisherRepository, times(1)).deleteById(id);
+        verify(publisherRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeletePublisherByName() {
+        when(publisherRepository.existsByName("Sample Publisher")).thenReturn(true);
+        doNothing().when(publisherRepository).deletePublisherByName("Sample Publisher");
+
+        publisherServiceImpl.deletePublisherByName("Sample Publisher");
+
+        verify(publisherRepository, times(1)).deletePublisherByName("Sample Publisher");
     }
 }
