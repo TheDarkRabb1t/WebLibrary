@@ -18,8 +18,10 @@ public interface BookService {
 
     List<Book> findBooksByPublishers(Publisher publisher);
 
+    List<Author> findAuthorsByBookIsbn(String isbn);
     List<Author> findAuthorsByBookId(Long id);
 
+    Publisher findPublisherByBookIsbn(String isbn);
     Publisher findPublisherByBookId(Long id);
 
     void createBook(Book book);

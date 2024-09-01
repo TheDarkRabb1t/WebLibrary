@@ -61,19 +61,15 @@ public class RestBookController {
                 .collect(Collectors.toList()));
     }
 
-//    @GetMapping("/{isbn}/authors")
-//    public ResponseEntity<List<AuthorDTO>> findAuthorsByBookIsbn(@PathVariable Long isbn) {
-//        List<Author> authors = bookService.findAuthorsByBookId(id);
-//        return ResponseEntity.ok(authors.stream()
-//                .map(authorMapper::toDto)
-//                .collect(Collectors.toList()));
-//    }
-//
-//    @GetMapping("/{isbn}/publisher")
-//    public ResponseEntity<PublisherDTO> findPublisherByBookIsbn(@PathVariable Long isbn) {
-//        Publisher publisher = bookService.findPublisherByBookId(id);
-//        return ResponseEntity.ok(publisherMapper.toDto(publisher));
-//    }
+    @GetMapping("/{isbn}/authors")
+    public ResponseEntity<List<AuthorDTO>> findAuthorsByBookIsbn(@PathVariable String isbn) {
+        return ResponseEntity.ok(bookService.findAuthorsByBookIsbn(isbn).stream().map(authorMapper::toDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{isbn}/publisher")
+    public ResponseEntity<PublisherDTO> findPublisherByBookIsbn(@PathVariable String isbn) {
+        return ResponseEntity.ok(publisherMapper.toDTO(bookService.findPublisherByBookIsbn(isbn)));
+    }
 
     @PostMapping
     public ResponseEntity<Void> createBook(@RequestBody @Valid BookDTO bookDTO) {

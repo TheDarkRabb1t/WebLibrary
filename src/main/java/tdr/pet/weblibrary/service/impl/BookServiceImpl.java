@@ -3,6 +3,7 @@ package tdr.pet.weblibrary.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.book.BookNotFoundException;
+import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
@@ -43,8 +44,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Author> findAuthorsByBookIsbn(String isbn) {
+        return bookRepository.findAuthorsByBookIsbn(isbn);
+    }
+
+    @Override
     public List<Author> findAuthorsByBookId(Long id) {
         return bookRepository.findAuthorsByBookId(id);
+    }
+
+    @Override
+    public Publisher findPublisherByBookIsbn(String isbn) {
+        return bookRepository.findPublisherByBookIsbn(isbn)
+                .orElseThrow(() -> new PublisherNotFoundException("Publisher with this book's isbn not found"));
     }
 
     @Override
