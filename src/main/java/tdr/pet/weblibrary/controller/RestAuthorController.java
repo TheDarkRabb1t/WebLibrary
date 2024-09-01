@@ -25,7 +25,7 @@ public class RestAuthorController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<AuthorDTO> getAuthorByName(@Valid @RequestBody AuthorDTO authorDTO, BindingResult bindingResult) {
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
