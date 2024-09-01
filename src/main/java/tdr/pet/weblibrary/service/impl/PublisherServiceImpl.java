@@ -15,13 +15,13 @@ public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
 
     @Override
-    public Publisher getPublisherByName(String name) {
+    public Publisher findPublisherByName(String name) {
         return publisherRepository.getPublisherByName(name)
                 .orElseThrow(() -> new PublisherNotFoundException("Publisher with this name wasn't found"));
     }
 
     @Override
-    public List<Publisher> getPublishersByAddress(String address) {
+    public List<Publisher> findPublishersByAddress(String address) {
         return publisherRepository.getPublishersByAddress(address);
     }
 

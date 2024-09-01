@@ -21,7 +21,7 @@ public class RestPublisherController {
         if (ObjectUtils.isEmpty(publisherName) || bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(publisherMapper.toDTO(publisherService.getPublisherByName(publisherName)));
+        return ResponseEntity.ok(publisherMapper.toDTO(publisherService.findPublisherByName(publisherName)));
     }
 
     @PostMapping("/create")

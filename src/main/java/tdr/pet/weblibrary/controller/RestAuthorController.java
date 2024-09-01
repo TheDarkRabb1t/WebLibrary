@@ -21,7 +21,7 @@ public class RestAuthorController {
         if (ObjectUtils.isEmpty(authorEmail) || bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(authorMapper.toDTO(authorService.getAuthorByEmail(authorEmail)));
+        return ResponseEntity.ok(authorMapper.toDTO(authorService.findAuthorByName(authorEmail)));
     }
 
     @PostMapping("/create")

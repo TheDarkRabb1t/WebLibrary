@@ -5,9 +5,9 @@ import tdr.pet.weblibrary.model.entity.Author;
 import java.util.List;
 
 public interface AuthorService {
-    List<Author> getAuthorsByName(String name);
+    List<Author> findAuthorsByName(String name);
 
-    Author getAuthorByEmail(String email);
+    Author findAuthorByName(String email);
 
     boolean exists(String email);
 

@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface PublisherService {
 
-    Publisher getPublisherByName(String name);
+    Publisher findPublisherByName(String name);
 
-    List<Publisher> getPublishersByAddress(String address);
+    List<Publisher> findPublishersByAddress(String address);
 
     boolean exists(String name);
 

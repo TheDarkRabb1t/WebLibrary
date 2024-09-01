@@ -37,7 +37,7 @@ class TestAuthorService {
 
         when(authorRepository.findAuthorsByName("John")).thenReturn(List.of(author1, author2));
 
-        List<Author> results = authorService.getAuthorsByName("John");
+        List<Author> results = authorService.findAuthorsByName("John");
         assertFalse(results.isEmpty());
         assertEquals(2, results.size());
         assertEquals("John First", results.get(0).getName());
@@ -50,7 +50,7 @@ class TestAuthorService {
         author.setEmail(email);
         when(authorRepository.findAuthorByEmail(email)).thenReturn(Optional.of(author));
 
-        Author result = authorService.getAuthorByEmail(email);
+        Author result = authorService.findAuthorByName(email);
 
         assertNotNull(result);
         assertEquals(email, result.getEmail());

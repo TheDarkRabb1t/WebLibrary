@@ -28,7 +28,7 @@ public class RestBookController {
 
     @GetMapping("/{isbn}")
     public ResponseEntity<BookDTO> getBookByIsbn(@PathVariable String isbn) {
-        Book book = bookService.getBookByISBN(isbn);
+        Book book = bookService.findBooksByIsbn(isbn);
         return ResponseEntity.ok(bookMapper.toDTO(book));
     }
 
@@ -38,9 +38,9 @@ public class RestBookController {
             return ResponseEntity.badRequest().build();
         }
 
-        Publisher publisher = publisherService.getPublisherByName(bookDTO.getPublisherDTO().getName());
+        Publisher publisher = publisherService.findPublisherByName(bookDTO.getPublisherDTO().getName());
         Set<Author> authors = bookDTO.getAuthors().stream()
-                .map(authorDTO -> authorService.getAuthorByEmail(authorDTO.getEmail()))
+                .map(authorDTO -> authorService.findAuthorByName(authorDTO.getEmail()))
                 .collect(Collectors.toSet());
 
         Book book = bookMapper.toEntity(bookDTO);
@@ -57,9 +57,9 @@ public class RestBookController {
             return ResponseEntity.badRequest().build();
         }
 
-        Publisher publisher = publisherService.getPublisherByName(bookDTO.getPublisherDTO().getName());
+        Publisher publisher = publisherService.findPublisherByName(bookDTO.getPublisherDTO().getName());
         Set<Author> authors = bookDTO.getAuthors().stream()
-                .map(authorDTO -> authorService.getAuthorByEmail(authorDTO.getEmail()))
+                .map(authorDTO -> authorService.findAuthorByName(authorDTO.getEmail()))
                 .collect(Collectors.toSet());
 
         Book book = bookMapper.toEntity(bookDTO);

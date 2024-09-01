@@ -18,17 +18,17 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public List<Book> getBooksByTitle(String title) {
+    public List<Book> findBooksByTitle(String title) {
         return bookRepository.getBooksByTitle(title);
     }
 
     @Override
-    public List<Book> getBooksByAuthors(Set<Author> authors) {
+    public List<Book> findBooksByAuthors(Set<Author> authors) {
         return bookRepository.getBooksByAuthors(authors);
     }
 
     @Override
-    public Book getBookByISBN(String isbn) {
+    public Book findBooksByIsbn(String isbn) {
         return bookRepository.getBookByIsbn(isbn)
                 .orElseThrow(() -> new BookNotFoundException("Book with given isbn wasn't found"));
     }
@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPublisher(Publisher publisher) {
+    public List<Book> findBooksByPublishers(Publisher publisher) {
         return bookRepository.getBooksByPublisher(publisher);
     }
 

@@ -36,7 +36,7 @@ class TestPublisherService {
         publisher.setName(name);
         when(publisherRepository.getPublisherByName(name)).thenReturn(Optional.of(publisher));
 
-        Publisher result = publisherService.getPublisherByName(name);
+        Publisher result = publisherService.findPublisherByName(name);
 
         assertNotNull(result);
         assertEquals(name, result.getName());
@@ -50,7 +50,7 @@ class TestPublisherService {
         publisher.setAddress(address);
         when(publisherRepository.getPublishersByAddress(address)).thenReturn(Collections.singletonList(publisher));
 
-        List<Publisher> publishers = publisherService.getPublishersByAddress(address);
+        List<Publisher> publishers = publisherService.findPublishersByAddress(address);
 
         assertNotNull(publishers);
         assertEquals(1, publishers.size());

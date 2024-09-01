@@ -15,12 +15,12 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
     @Override
-    public List<Author> getAuthorsByName(String name) {
+    public List<Author> findAuthorsByName(String name) {
         return authorRepository.findAuthorsByName(name);
     }
 
     @Override
-    public Author getAuthorByEmail(String email) {
+    public Author findAuthorByName(String email) {
         return authorRepository.findAuthorByEmail(email)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with this email wasn't found"));
     }

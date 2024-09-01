@@ -63,7 +63,7 @@ public class TestBookService {
         String title = "Book Title";
         when(bookRepository.getBooksByTitle(title)).thenReturn(books);
 
-        List<Book> result = bookService.getBooksByTitle(title);
+        List<Book> result = bookService.findBooksByTitle(title);
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -76,7 +76,7 @@ public class TestBookService {
         String isbn = "123-4567890123";
         when(bookRepository.getBookByIsbn(isbn)).thenReturn(Optional.of(book));
 
-        Book result = bookService.getBookByISBN(isbn);
+        Book result = bookService.findBooksByIsbn(isbn);
 
         assertNotNull(result);
         assertEquals(book, result);
@@ -98,7 +98,7 @@ public class TestBookService {
     void testGetBooksByAuthors() {
         when(bookRepository.getBooksByAuthors(authors)).thenReturn(books);
 
-        List<Book> result = bookService.getBooksByAuthors(authors);
+        List<Book> result = bookService.findBooksByAuthors(authors);
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -110,7 +110,7 @@ public class TestBookService {
     void testGetBooksByPublisher() {
         when(bookRepository.getBooksByPublisher(publisher)).thenReturn(books);
 
-        List<Book> result = bookService.getBooksByPublisher(publisher);
+        List<Book> result = bookService.findBooksByPublishers(publisher);
 
         assertNotNull(result);
         assertEquals(1, result.size());
