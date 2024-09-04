@@ -40,14 +40,13 @@ public class RestAuthorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateAuthorById(@PathVariable Long id, @RequestBody @Valid AuthorDTO authorDTO) {
-        Author author = authorMapper.toEntity(authorDTO);
-        authorService.updateAuthorById(id, author);
+        authorService.updateAuthorById(id, authorDTO);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/email/{email}")
     public ResponseEntity<Void> updateAuthorByEmail(@PathVariable String email, @RequestBody @Valid AuthorDTO authorDTO) {
-        authorService.updateAuthorByEmail(email, authorMapper.toEntity(authorDTO));
+        authorService.updateAuthorByEmail(email, authorDTO);
         return ResponseEntity.ok().build();
     }
 

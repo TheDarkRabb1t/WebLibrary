@@ -112,12 +112,7 @@ public class TestRestAuthorController {
         authorDTO.setName("John Doe");
         authorDTO.setEmail("john.doe@example.com");
         authorDTO.setImgUrl("http://example.com/image.jpg");
-
-        Author author = new Author();
-
-        when(authorMapper.toEntity(any(AuthorDTO.class))).thenReturn(author);
-        doNothing().when(authorService).updateAuthorById(anyLong(), any(Author.class));
-
+        doNothing().when(authorService).updateAuthorById(anyLong(), any(AuthorDTO.class));
         mockMvc.perform(put("/api/v1/author/{id}", 1L)
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(authorDTO)))
@@ -130,12 +125,7 @@ public class TestRestAuthorController {
         authorDTO.setName("John Doe");
         authorDTO.setEmail("john.doe@example.com");
         authorDTO.setImgUrl("http://example.com/image.jpg");
-
-        Author author = new Author();
-
-        when(authorMapper.toEntity(any(AuthorDTO.class))).thenReturn(author);
-        doNothing().when(authorService).updateAuthorByEmail(anyString(), any(Author.class));
-
+        doNothing().when(authorService).updateAuthorById(anyLong(), any(AuthorDTO.class));
         mockMvc.perform(put("/api/v1/author/email/{email}", "john.doe@example.com")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(authorDTO)))
@@ -145,7 +135,6 @@ public class TestRestAuthorController {
     @Test
     void testDeleteAuthorById() throws Exception {
         doNothing().when(authorService).deleteAuthorById(anyLong());
-
         mockMvc.perform(delete("/api/v1/author/{id}", 1L))
                 .andExpect(status().isNoContent());
     }
@@ -153,7 +142,6 @@ public class TestRestAuthorController {
     @Test
     void testDeleteAuthorByEmail() throws Exception {
         doNothing().when(authorService).deleteAuthorByEmail(anyString());
-
         mockMvc.perform(delete("/api/v1/author/email/{email}", "john.doe@example.com"))
                 .andExpect(status().isNoContent());
     }

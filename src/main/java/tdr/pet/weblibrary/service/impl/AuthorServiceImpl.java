@@ -3,7 +3,10 @@ package tdr.pet.weblibrary.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
+import tdr.pet.weblibrary.exception.author.MultipleAuthorsFoundException;
+import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.entity.Author;
+import tdr.pet.weblibrary.model.mapper.AuthorMapper;
 import tdr.pet.weblibrary.repository.AuthorRepository;
 import tdr.pet.weblibrary.service.AuthorService;
 
@@ -14,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
     @Override
     public List<Author> findAuthorsByName(String name) {
@@ -36,21 +40,23 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void updateAuthorById(Long id, Author author) {
-        if (authorRepository.existsById(id)) {
-            authorRepository.updateAuthorById(id, author);
-        } else {
-            throw new AuthorNotFoundException();
-        }
+    public void updateAuthorById(Long id, AuthorDTO authorDTO) {
+        Author foundAuthor = authorRepository.findById(id)
+                .orElseThrow(() -> new AuthorNotFoundException("Couldn't found author by id"));
+        authorMapper.update(authorDTO, foundAuthor);
+        authorRepository.save(foundAuthor);
     }
 
     @Override
-    public void updateAuthorByEmail(String email, Author author) {
-        if (authorRepository.existsByEmail(email)) {
-            authorRepository.updateAuthorByEmail(email, author);
-        } else {
-            throw new AuthorNotFoundException();
+    public void updateAuthorByEmail(String email, AuthorDTO authorDTO) {
+        Set<Author> authors = authorRepository.findAuthorsByEmail(email);
+        if (authors.size() > 1) {
+            throw new MultipleAuthorsFoundException();
         }
+        Author foundAuthor = authors.stream().findFirst()
+                .orElseThrow(() -> new AuthorNotFoundException("Couldn't found author by email"));
+        authorMapper.update(authorDTO, foundAuthor);
+        authorRepository.save(foundAuthor);
     }
 
     @Override
