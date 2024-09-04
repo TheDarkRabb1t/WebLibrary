@@ -96,11 +96,7 @@ public class TestRestPublisherController {
     @Test
     void testUpdatePublisherById() throws Exception {
         PublisherDTO publisherDTO = new PublisherDTO("Publisher Name", "Publisher Address");
-        Publisher publisher = new Publisher();
-
-        when(publisherMapper.toEntity(any(PublisherDTO.class))).thenReturn(publisher);
-        doNothing().when(publisherService).updatePublisherById(anyLong(), any(Publisher.class));
-
+        doNothing().when(publisherService).updatePublisherById(anyLong(), any(PublisherDTO.class));
         mockMvc.perform(put("/api/v1/publisher/{id}", 1L)
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(publisherDTO)))
@@ -110,11 +106,7 @@ public class TestRestPublisherController {
     @Test
     void testUpdatePublisherByName() throws Exception {
         PublisherDTO publisherDTO = new PublisherDTO("Publisher Name", "Publisher Address");
-        Publisher publisher = new Publisher();
-
-        when(publisherMapper.toEntity(any(PublisherDTO.class))).thenReturn(publisher);
-        doNothing().when(publisherService).updatePublisherByName(anyString(), any(Publisher.class));
-
+        doNothing().when(publisherService).updatePublisherByName(anyString(), any(PublisherDTO.class));
         mockMvc.perform(put("/api/v1/publisher/name/{name}", "Publisher Name")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(publisherDTO)))

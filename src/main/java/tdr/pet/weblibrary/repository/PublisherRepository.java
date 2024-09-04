@@ -16,8 +16,5 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
 
     boolean existsByName(String name);
 
-    void updatePublisherById(Long id, Publisher publisher);
-    void updatePublisherByName(String name, Publisher publisher);
-
     void deletePublisherByName(String name);
 }
