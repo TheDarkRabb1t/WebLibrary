@@ -23,7 +23,7 @@ public class Author {
     private String name;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "imgUrl", nullable = false)
+    @Column(name = "img_url", nullable = false)
     private String imgUrl;
 
     @CreatedDate
