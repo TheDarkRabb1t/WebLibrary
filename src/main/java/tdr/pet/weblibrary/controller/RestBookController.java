@@ -79,13 +79,13 @@ public class RestBookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateBookById(@PathVariable Long id, @RequestBody @Valid BookDTO bookDTO) {
-        bookService.updateBookById(id, bookMapper.toEntity(bookDTO));
+        bookService.updateBookById(id, bookDTO);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/isbn/{isbn}")
     public ResponseEntity<Void> updateBookByIsbn(@PathVariable String isbn, @RequestBody @Valid BookDTO bookDTO) {
-        bookService.updateBookByIsbn(isbn, bookMapper.toEntity(bookDTO));
+        bookService.updateBookByIsbn(isbn, bookDTO);
         return ResponseEntity.ok().build();
     }
 

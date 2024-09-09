@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tdr.pet.weblibrary.exception.publisher.MultiplePublishersFoundException;
+import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
+import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.entity.Publisher;
+import tdr.pet.weblibrary.model.mapper.PublisherMapper;
 import tdr.pet.weblibrary.repository.PublisherRepository;
 import tdr.pet.weblibrary.service.impl.PublisherServiceImpl;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,6 +22,9 @@ class TestPublisherService {
 
     @Mock
     private PublisherRepository publisherRepository;
+
+    @Mock
+    private PublisherMapper publisherMapper;
 
     @InjectMocks
     private PublisherServiceImpl publisherServiceImpl;
@@ -78,24 +84,76 @@ class TestPublisherService {
     }
 
     @Test
-    void testUpdatePublisherById() {
-        when(publisherRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(publisherRepository).updatePublisherById(1L, publisher);
+    void testUpdatePublisherById_Success() {
+        Long publisherId = 1L;
+        PublisherDTO publisherDTO = new PublisherDTO();
+        Publisher foundPublisher = new Publisher();
 
+        when(publisherRepository.findById(publisherId)).thenReturn(Optional.of(foundPublisher));
 
-        publisherServiceImpl.updatePublisherById(1L, publisher);
+        publisherServiceImpl.updatePublisherById(publisherId, publisherDTO);
 
-        verify(publisherRepository, times(1)).updatePublisherById(1L, publisher);
+        verify(publisherMapper).update(publisherDTO, foundPublisher);
+        verify(publisherRepository).save(foundPublisher);
     }
 
     @Test
-    void testUpdatePublisherByName() {
-        when(publisherRepository.existsByName("Sample Publisher")).thenReturn(true);
-        doNothing().when(publisherRepository).updatePublisherByName("Sample Publisher", publisher);
+    void testUpdatePublisherById_PublisherNotFound() {
+        Long publisherId = 1L;
+        PublisherDTO publisherDTO = new PublisherDTO();
 
-        publisherServiceImpl.updatePublisherByName("Sample Publisher", publisher);
+        when(publisherRepository.findById(publisherId)).thenReturn(Optional.empty());
 
-        verify(publisherRepository, times(1)).updatePublisherByName("Sample Publisher", publisher);
+        assertThrows(PublisherNotFoundException.class, () ->
+                publisherServiceImpl.updatePublisherById(publisherId, publisherDTO)
+        );
+
+        verify(publisherRepository, never()).save(any(Publisher.class));
+    }
+
+    @Test
+    void testUpdatePublisherByName_Success() {
+        String name = "Example Publisher";
+        PublisherDTO publisherDTO = new PublisherDTO();
+        Publisher foundPublisher = new Publisher();
+        Set<Publisher> publishers = Collections.singleton(foundPublisher);
+
+        when(publisherRepository.findPublishersByName(name)).thenReturn(publishers);
+
+        publisherServiceImpl.updatePublisherByName(name, publisherDTO);
+
+        verify(publisherMapper).update(publisherDTO, foundPublisher);
+        verify(publisherRepository).save(foundPublisher);
+    }
+
+    @Test
+    void testUpdatePublisherByName_MultiplePublishersFound() {
+        String name = "Example Publisher";
+        PublisherDTO publisherDTO = new PublisherDTO();
+        Set<Publisher> publishers = new HashSet<>(Arrays.asList(new Publisher(), new Publisher()));
+
+        when(publisherRepository.findPublishersByName(name)).thenReturn(publishers);
+
+        assertThrows(MultiplePublishersFoundException.class, () ->
+                publisherServiceImpl.updatePublisherByName(name, publisherDTO)
+        );
+
+        verify(publisherRepository, never()).save(any(Publisher.class));
+    }
+
+    @Test
+    void testUpdatePublisherByName_PublisherNotFound() {
+        String name = "Example Publisher";
+        PublisherDTO publisherDTO = new PublisherDTO();
+        Set<Publisher> publishers = Collections.emptySet();
+
+        when(publisherRepository.findPublishersByName(name)).thenReturn(publishers);
+
+        assertThrows(PublisherNotFoundException.class, () ->
+                publisherServiceImpl.updatePublisherByName(name, publisherDTO)
+        );
+
+        verify(publisherRepository, never()).save(any(Publisher.class));
     }
 
     @Test
@@ -107,6 +165,7 @@ class TestPublisherService {
 
         verify(publisherRepository, times(1)).deleteById(1L);
     }
+
 
     @Test
     void testDeletePublisherByName() {

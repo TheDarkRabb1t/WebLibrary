@@ -45,13 +45,13 @@ public class RestPublisherController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePublisherById(@PathVariable Long id, @RequestBody @Valid PublisherDTO publisherDTO) {
-        publisherService.updatePublisherById(id, publisherMapper.toEntity(publisherDTO));
+        publisherService.updatePublisherById(id, publisherDTO);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/name/{name}")
     public ResponseEntity<Void> updatePublisherByName(@PathVariable String name, @RequestBody @Valid PublisherDTO publisherDTO) {
-        publisherService.updatePublisherByName(name, publisherMapper.toEntity(publisherDTO));
+        publisherService.updatePublisherByName(name, publisherDTO);
         return ResponseEntity.ok().build();
     }
 

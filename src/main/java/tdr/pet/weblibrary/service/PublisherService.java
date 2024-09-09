@@ -1,5 +1,6 @@
 package tdr.pet.weblibrary.service;
 
+import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public interface PublisherService {
 
     void createNewPublisher(Publisher publisher);
 
-    void updatePublisherById(Long id, Publisher publisher);
+    void updatePublisherById(Long id, PublisherDTO publisherDTO);
 
-    void updatePublisherByName(String name, Publisher publisher);
+    void updatePublisherByName(String name, PublisherDTO publisherDTO);
 
     void deletePublisherById(Long id);
 

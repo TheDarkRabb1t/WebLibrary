@@ -14,7 +14,6 @@ import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.mapper.AuthorMapper;
 import tdr.pet.weblibrary.service.AuthorService;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,6 @@ public class TestRestAuthorController {
         authorDTO.setImgUrl("http://example.com/image.jpg");
 
         Author author = new Author();
-
         List<Author> authors = List.of(author);
 
         when(authorService.findAuthorsByName(anyString())).thenReturn(authors);
@@ -74,7 +72,6 @@ public class TestRestAuthorController {
         authorDTO.setImgUrl("http://example.com/image.jpg");
 
         Author author = new Author();
-
         Set<Author> authors = new HashSet<>(List.of(author));
 
         when(authorService.findAuthorsByEmail(anyString())).thenReturn(authors);
@@ -96,7 +93,6 @@ public class TestRestAuthorController {
         authorDTO.setImgUrl("http://example.com/image.jpg");
 
         Author author = new Author();
-
         when(authorMapper.toEntity(any(AuthorDTO.class))).thenReturn(author);
         doNothing().when(authorService).createNewAuthor(any(Author.class));
 
@@ -113,10 +109,7 @@ public class TestRestAuthorController {
         authorDTO.setEmail("john.doe@example.com");
         authorDTO.setImgUrl("http://example.com/image.jpg");
 
-        Author author = new Author();
-
-        when(authorMapper.toEntity(any(AuthorDTO.class))).thenReturn(author);
-        doNothing().when(authorService).updateAuthorById(anyLong(), any(Author.class));
+        doNothing().when(authorService).updateAuthorById(eq(1L), any(AuthorDTO.class));
 
         mockMvc.perform(put("/api/v1/author/{id}", 1L)
                         .contentType("application/json")
@@ -131,10 +124,7 @@ public class TestRestAuthorController {
         authorDTO.setEmail("john.doe@example.com");
         authorDTO.setImgUrl("http://example.com/image.jpg");
 
-        Author author = new Author();
-
-        when(authorMapper.toEntity(any(AuthorDTO.class))).thenReturn(author);
-        doNothing().when(authorService).updateAuthorByEmail(anyString(), any(Author.class));
+        doNothing().when(authorService).updateAuthorByEmail(eq("john.doe@example.com"), any(AuthorDTO.class));
 
         mockMvc.perform(put("/api/v1/author/email/{email}", "john.doe@example.com")
                         .contentType("application/json")
@@ -144,7 +134,7 @@ public class TestRestAuthorController {
 
     @Test
     void testDeleteAuthorById() throws Exception {
-        doNothing().when(authorService).deleteAuthorById(anyLong());
+        doNothing().when(authorService).deleteAuthorById(eq(1L));
 
         mockMvc.perform(delete("/api/v1/author/{id}", 1L))
                 .andExpect(status().isNoContent());
@@ -152,7 +142,7 @@ public class TestRestAuthorController {
 
     @Test
     void testDeleteAuthorByEmail() throws Exception {
-        doNothing().when(authorService).deleteAuthorByEmail(anyString());
+        doNothing().when(authorService).deleteAuthorByEmail(eq("john.doe@example.com"));
 
         mockMvc.perform(delete("/api/v1/author/email/{email}", "john.doe@example.com"))
                 .andExpect(status().isNoContent());

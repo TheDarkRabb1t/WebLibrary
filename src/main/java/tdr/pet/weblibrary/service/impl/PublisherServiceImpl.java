@@ -2,20 +2,23 @@ package tdr.pet.weblibrary.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import tdr.pet.weblibrary.exception.publisher.MultiplePublishersFoundException;
 import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
+import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.entity.Publisher;
+import tdr.pet.weblibrary.model.mapper.PublisherMapper;
 import tdr.pet.weblibrary.repository.PublisherRepository;
 import tdr.pet.weblibrary.service.PublisherService;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
+    private final PublisherMapper publisherMapper;
 
     @Override
     public Set<Publisher> findPublishersByName(String name) {
@@ -38,21 +41,23 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void updatePublisherById(Long id, Publisher publisher) {
-        if (publisherRepository.existsById(id)) {
-            publisherRepository.updatePublisherById(id, publisher);
-        } else {
-            throw new PublisherNotFoundException();
-        }
+    public void updatePublisherById(Long id, PublisherDTO publisherDTO) {
+        Publisher foundAuthor = publisherRepository.findById(id)
+                .orElseThrow(() -> new PublisherNotFoundException("Couldn't found publisher by id"));
+        publisherMapper.update(publisherDTO, foundAuthor);
+        publisherRepository.save(foundAuthor);
     }
 
     @Override
-    public void updatePublisherByName(String name, Publisher publisher) {
-        if (publisherRepository.existsByName(name)) {
-            publisherRepository.updatePublisherByName(name, publisher);
-        } else {
-            throw new PublisherNotFoundException();
+    public void updatePublisherByName(String name, PublisherDTO publisherDTO) {
+        Set<Publisher> publishers = publisherRepository.findPublishersByName(name);
+        if (publishers.size() > 1) {
+            throw new MultiplePublishersFoundException();
         }
+        Publisher publisher = publishers.stream().findFirst()
+                .orElseThrow(() -> new PublisherNotFoundException("Couldn't found publisher by name"));
+        publisherMapper.update(publisherDTO, publisher);
+        publisherRepository.save(publisher);
     }
 
     @Override

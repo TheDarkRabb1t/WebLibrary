@@ -172,11 +172,7 @@ public class TestRestBookController {
     @Test
     void testUpdateBookById() throws Exception {
         BookDTO bookDTO = new BookDTO("Book Title", "Book Description", 300, "1234567890123", new PublisherDTO("Publisher Name", "Publisher Address"), new HashSet<>(), null, "http://image.url", LocalDateTime.now());
-        Book book = new Book();
-
-        when(bookMapper.toEntity(any(BookDTO.class))).thenReturn(book);
-        doNothing().when(bookService).updateBookById(anyLong(), any(Book.class));
-
+        doNothing().when(bookService).updateBookById(anyLong(), any(BookDTO.class));
         mockMvc.perform(put("/api/v1/book/{id}", 1L)
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(bookDTO)))
@@ -186,11 +182,7 @@ public class TestRestBookController {
     @Test
     void testUpdateBookByIsbn() throws Exception {
         BookDTO bookDTO = new BookDTO("Book Title", "Book Description", 300, "1234567890123", new PublisherDTO("Publisher Name", "Publisher Address"), new HashSet<>(), null, "http://image.url", LocalDateTime.now());
-        Book book = new Book();
-
-        when(bookMapper.toEntity(any(BookDTO.class))).thenReturn(book);
-        doNothing().when(bookService).updateBookByIsbn(anyString(), any(Book.class));
-
+        doNothing().when(bookService).updateBookByIsbn(anyString(), any(BookDTO.class));
         mockMvc.perform(put("/api/v1/book/isbn/{isbn}", "1234567890123")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(bookDTO)))

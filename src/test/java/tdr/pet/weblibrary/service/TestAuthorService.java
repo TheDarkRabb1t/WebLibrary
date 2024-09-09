@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
+import tdr.pet.weblibrary.exception.author.MultipleAuthorsFoundException;
+import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.entity.Author;
+import tdr.pet.weblibrary.model.mapper.AuthorMapper;
 import tdr.pet.weblibrary.repository.AuthorRepository;
 import tdr.pet.weblibrary.service.impl.AuthorServiceImpl;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,6 +22,9 @@ class TestAuthorService {
 
     @Mock
     private AuthorRepository authorRepository;
+
+    @Mock
+    private AuthorMapper authorMapper;
 
     @InjectMocks
     private AuthorServiceImpl authorServiceImpl;
@@ -78,23 +84,68 @@ class TestAuthorService {
     }
 
     @Test
-    void testUpdateAuthorById() {
-        when(authorRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(authorRepository).updateAuthorById(1L, author);
+    void testUpdateAuthorById_Success() {
+        Long authorId = 1L;
+        AuthorDTO authorDTO = new AuthorDTO();
+        Author foundAuthor = new Author();
+        when(authorRepository.findById(authorId)).thenReturn(Optional.of(foundAuthor));
 
-        authorServiceImpl.updateAuthorById(1L, author);
+        authorServiceImpl.updateAuthorById(authorId, authorDTO);
 
-        verify(authorRepository, times(1)).updateAuthorById(1L, author);
+        verify(authorMapper).update(authorDTO, foundAuthor);
+        verify(authorRepository).save(foundAuthor);
     }
 
     @Test
-    void testUpdateAuthorByEmail() {
-        when(authorRepository.existsByEmail("author@example.com")).thenReturn(true);
-        doNothing().when(authorRepository).updateAuthorByEmail("author@example.com", author);
-        authorServiceImpl.updateAuthorByEmail("author@example.com", author);
-
-        verify(authorRepository, times(1)).updateAuthorByEmail("author@example.com", author);
+    void testUpdateAuthorById_AuthorNotFound() {
+        Long authorId = 1L;
+        AuthorDTO authorDTO = new AuthorDTO();
+        when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
+        assertThrows(AuthorNotFoundException.class, () -> authorServiceImpl.updateAuthorById(authorId, authorDTO));
+        verify(authorRepository, never()).save(any(Author.class));
     }
+
+    @Test
+    void testUpdateAuthorByEmail_Success() {
+        String email = "test@example.com";
+        AuthorDTO authorDTO = new AuthorDTO();
+        Author foundAuthor = new Author();
+        Set<Author> authors = Collections.singleton(foundAuthor);
+        when(authorRepository.findAuthorsByEmail(email)).thenReturn(authors);
+        authorServiceImpl.updateAuthorByEmail(email, authorDTO);
+        verify(authorMapper).update(authorDTO, foundAuthor);
+        verify(authorRepository).save(foundAuthor);
+    }
+
+    @Test
+    void testUpdateAuthorByEmail_MultipleAuthorsFound() {
+        String email = "test@example.com";
+        AuthorDTO authorDTO = new AuthorDTO();
+        Set<Author> authors = new HashSet<>(Arrays.asList(new Author(), new Author()));
+        when(authorRepository.findAuthorsByEmail(email)).thenReturn(authors);
+        assertThrows(MultipleAuthorsFoundException.class, () ->
+                authorServiceImpl.updateAuthorByEmail(email, authorDTO)
+        );
+        verify(authorRepository, never()).save(any(Author.class));
+    }
+
+    @Test
+    void testUpdateAuthorByEmail_AuthorNotFound() {
+        // Arrange
+        String email = "test@example.com";
+        AuthorDTO authorDTO = new AuthorDTO();
+        Set<Author> authors = Collections.emptySet();
+
+        when(authorRepository.findAuthorsByEmail(email)).thenReturn(authors);
+
+        // Act & Assert
+        assertThrows(AuthorNotFoundException.class, () ->
+                authorServiceImpl.updateAuthorByEmail(email, authorDTO)
+        );
+
+        verify(authorRepository, never()).save(any(Author.class));
+    }
+
 
     @Test
     void testDeleteAuthorById() {

@@ -1,5 +1,6 @@
 package tdr.pet.weblibrary.service;
 
+import tdr.pet.weblibrary.model.dto.BookDTO;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
@@ -26,9 +27,9 @@ public interface BookService {
 
     void createBook(Book book);
 
-    void updateBookById(Long id, Book book);
+    void updateBookById(Long id, BookDTO book);
 
-    void updateBookByIsbn(String isbn, Book book);
+    void updateBookByIsbn(String isbn, BookDTO book);
 
     void deleteBookById(Long id);
 
