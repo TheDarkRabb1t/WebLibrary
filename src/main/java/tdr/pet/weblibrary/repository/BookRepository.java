@@ -53,9 +53,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> getBooksByPublisher(Publisher publisher);
 
-    void updateBookById(Long id, Book book);
-
-    void updateBookByIsbn(String isbn, Book book);
-
     void deleteBookByIsbn(String isbn);
 }

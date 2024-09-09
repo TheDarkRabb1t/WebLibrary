@@ -4,19 +4,24 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.book.BookNotFoundException;
 import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
+import tdr.pet.weblibrary.model.dto.BookDTO;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
+import tdr.pet.weblibrary.model.mapper.BookMapper;
 import tdr.pet.weblibrary.repository.BookRepository;
 import tdr.pet.weblibrary.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public List<Book> findBooksByTitle(String title) {
@@ -70,18 +75,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBookById(Long id, Book book) {
-        if (bookRepository.existsById(id)) {
-            bookRepository.updateBookById(id, book);
+    public void updateBookById(Long id, BookDTO bookDTO) {
+        Optional<Book> foundBook = bookRepository.findById(id);
+        if (foundBook.isPresent()) {
+            bookMapper.update(bookDTO, foundBook.get());
+            bookRepository.save(foundBook.get());
         } else {
             throw new BookNotFoundException();
         }
     }
 
     @Override
-    public void updateBookByIsbn(String isbn, Book book) {
-        if (bookRepository.existsByIsbn(isbn)) {
-            bookRepository.updateBookByIsbn(isbn, book);
+    public void updateBookByIsbn(String isbn, BookDTO bookDTO) {
+        Set<Book> books = bookRepository.findBooksByIsbn(isbn);
+        if (books.size() == 1) {
+            Book book = books.stream().findFirst().get();
+            bookMapper.update(bookDTO, book);
+            bookRepository.save(book);
+        } else if (books.size() > 1) {
+            throw new MultipleBooksFoundException();
         } else {
             throw new BookNotFoundException();
         }

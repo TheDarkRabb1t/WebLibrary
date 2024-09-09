@@ -5,13 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import tdr.pet.weblibrary.model.dto.BookDTO;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
 import tdr.pet.weblibrary.model.entity.Publisher;
+import tdr.pet.weblibrary.model.mapper.BookMapper;
 import tdr.pet.weblibrary.repository.BookRepository;
 import tdr.pet.weblibrary.service.impl.BookServiceImpl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +24,8 @@ class TestBookService {
 
     @Mock
     private BookRepository bookRepository;
+    @Mock
+    private BookMapper bookMapper;
 
     @InjectMocks
     private BookServiceImpl bookServiceImpl;
@@ -71,6 +76,7 @@ class TestBookService {
         assertTrue(books.contains(book));
         verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
     }
+
     @Test
     void testFindBooksByIsbn_emptyList() {
         when(bookRepository.findBooksByIsbn("1234567890")).thenReturn(Set.of());
@@ -103,22 +109,24 @@ class TestBookService {
 
     @Test
     void testUpdateBookById() {
-        when(bookRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(bookRepository).updateBookById(1L, book);
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        bookServiceImpl.updateBookById(1L, book);
+        BookDTO bookDTO = bookMapper.toDTO(book);
+        bookServiceImpl.updateBookById(1L, bookDTO);
 
-        verify(bookRepository, times(1)).updateBookById(1L, book);
+        verify(bookRepository, times(1)).findById(1L);
+        verify(bookRepository, times(1)).save(book);
     }
 
     @Test
     void testUpdateBookByIsbn() {
-        when(bookRepository.existsByIsbn("1234567890")).thenReturn(true);
-        doNothing().when(bookRepository).updateBookByIsbn("1234567890", book);
+        when(bookRepository.findBooksByIsbn("1234567890")).thenReturn(Set.of(book));
 
-        bookServiceImpl.updateBookByIsbn("1234567890", book);
+        BookDTO bookDTO = bookMapper.toDTO(book);
+        bookServiceImpl.updateBookByIsbn("1234567890", bookDTO);
 
-        verify(bookRepository, times(1)).updateBookByIsbn("1234567890", book);
+        verify(bookRepository, times(1)).findBooksByIsbn("1234567890");
+        verify(bookRepository, times(1)).save(book);
     }
 
     @Test
