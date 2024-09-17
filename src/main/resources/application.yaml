@@ -19,3 +19,5 @@ springdoc:
     path: /api/v3/api-docs
   swagger-ui:
     path: /api/swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
