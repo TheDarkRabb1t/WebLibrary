@@ -1,5 +1,6 @@
 package tdr.pet.weblibrary.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/book")
+@Tag(name = "Books Controller")
 public class RestBookController {
     private final BookService bookService;
     private final AuthorMapper authorMapper;

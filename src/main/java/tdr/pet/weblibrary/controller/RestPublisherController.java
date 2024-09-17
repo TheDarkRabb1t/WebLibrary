@@ -1,5 +1,6 @@
 package tdr.pet.weblibrary.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/publisher")
+@Tag(name = "Publishers Controller")
 public class RestPublisherController {
     private final PublisherService publisherService;
     private final PublisherMapper publisherMapper;
