@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,18 @@ public class RestBookController {
     private final AuthorMapper authorMapper;
     private final BookMapper bookMapper;
     private final PublisherMapper publisherMapper;
+
+    @Operation(summary = "Get books", description = "Returns a list of books based on page values")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request params"),
+    })
+    @GetMapping(value = "/list", produces = "application/json")
+    public ResponseEntity<List<BookDTO>> getBooks(@RequestParam Integer pageNumber, Integer pageSize) {
+        return ResponseEntity.ok(bookService.getBooks(PageRequest.of(pageNumber, pageSize)).stream()
+                .map(bookMapper::toDTO)
+                .collect(Collectors.toList()));
+    }
 
     @Operation(summary = "Find books by title", description = "Returns a list of books based on the provided title")
     @ApiResponses(value = {

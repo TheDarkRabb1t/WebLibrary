@@ -1,6 +1,8 @@
 package tdr.pet.weblibrary.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
 import tdr.pet.weblibrary.exception.book.BookNotFoundException;
@@ -25,6 +27,11 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+
+    @Override
+    public Page<Book> getBooks(PageRequest pageRequest) {
+        return bookRepository.findAll(pageRequest);
+    }
 
     @Override
     public List<Book> findBooksByTitle(String title) {

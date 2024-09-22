@@ -8,6 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
@@ -58,6 +61,43 @@ public class TestRestBookController {
         Mockito.lenient().when(bookService.findBooksByAuthors(Mockito.anySet())).thenReturn(new ArrayList<>());
         Mockito.lenient().when(authorMapper.toEntity(Mockito.any(AuthorDTO.class))).thenReturn(new Author());
         mockMvc = MockMvcBuilders.standaloneSetup(restBookController).build();
+    }
+
+    @Test
+    void testGetBooksPagination() throws Exception {
+        Book book1 = new Book();
+        book1.setId(1L);
+        book1.setTitle("Book 1");
+        book1.setDescription("Description 1");
+        book1.setIsbn("1234567890123");
+
+        Book book2 = new Book();
+        book2.setId(2L);
+        book2.setTitle("Book 2");
+        book2.setDescription("Description 2");
+        book2.setIsbn("1234567890124");
+
+        BookDTO bookDTO1 = new BookDTO("Book 1", "Description 1", 300, "1234567890123", new PublisherDTO("Publisher 1", "Address 1"), new HashSet<>(), null, "http://image1.url", LocalDateTime.now());
+        BookDTO bookDTO2 = new BookDTO("Book 2", "Description 2", 400, "1234567890124", new PublisherDTO("Publisher 2", "Address 2"), new HashSet<>(), null, "http://image2.url", LocalDateTime.now());
+
+        List<Book> books = List.of(book1, book2);
+        Page<Book> page = new PageImpl<>(books, PageRequest.of(0, 2), books.size());
+
+        when(bookService.getBooks(any(PageRequest.class))).thenReturn(page);
+        when(bookMapper.toDTO(book1)).thenReturn(bookDTO1);
+        when(bookMapper.toDTO(book2)).thenReturn(bookDTO2);
+
+        mockMvc.perform(get("/api/v1/book/list")
+                        .param("pageNumber", "0")
+                        .param("pageSize", "2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$[0].title").value("Book 1"))
+                .andExpect(jsonPath("$[0].description").value("Description 1"))
+                .andExpect(jsonPath("$[0].isbn").value("1234567890123"))
+                .andExpect(jsonPath("$[1].title").value("Book 2"))
+                .andExpect(jsonPath("$[1].description").value("Description 2"))
+                .andExpect(jsonPath("$[1].isbn").value("1234567890124"));
     }
 
 
