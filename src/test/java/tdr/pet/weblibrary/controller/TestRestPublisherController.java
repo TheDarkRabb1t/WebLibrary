@@ -7,6 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tdr.pet.weblibrary.model.dto.PublisherDTO;
@@ -41,6 +44,39 @@ public class TestRestPublisherController {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(restPublisherController).build();
+    }
+
+    @Test
+    void testGetPublishersPagination() throws Exception {
+        Publisher publisher1 = new Publisher();
+        publisher1.setId(1L);
+        publisher1.setName("Publisher 1");
+        publisher1.setAddress("Address 1");
+
+        Publisher publisher2 = new Publisher();
+        publisher2.setId(2L);
+        publisher2.setName("Publisher 2");
+        publisher2.setAddress("Address 2");
+
+        PublisherDTO publisherDTO1 = new PublisherDTO("Publisher 1", "Address 1");
+        PublisherDTO publisherDTO2 = new PublisherDTO("Publisher 2", "Address 2");
+
+        List<Publisher> publishers = List.of(publisher1, publisher2);
+        Page<Publisher> page = new PageImpl<>(publishers, PageRequest.of(0, 2), publishers.size());
+
+        when(publisherService.getPublishers(any(PageRequest.class))).thenReturn(page);
+        when(publisherMapper.toDTO(publisher1)).thenReturn(publisherDTO1);
+        when(publisherMapper.toDTO(publisher2)).thenReturn(publisherDTO2);
+
+        mockMvc.perform(get("/api/v1/publisher/list")
+                        .param("pageNumber", "0")
+                        .param("pageSize", "2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$[0].name").value("Publisher 1"))
+                .andExpect(jsonPath("$[0].address").value("Address 1"))
+                .andExpect(jsonPath("$[1].name").value("Publisher 2"))
+                .andExpect(jsonPath("$[1].address").value("Address 2"));
     }
 
     @Test

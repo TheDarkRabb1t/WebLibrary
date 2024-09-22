@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.mapper.PublisherMapper;
 import tdr.pet.weblibrary.service.PublisherService;
@@ -27,6 +29,18 @@ public class RestPublisherController {
 
     private final PublisherService publisherService;
     private final PublisherMapper publisherMapper;
+
+    @Operation(summary = "Get publishers", description = "Returns a list of publishers based on page values")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request params")
+    })
+    @GetMapping(value = "/list", produces = "application/json")
+    public ResponseEntity<List<PublisherDTO>> getPublishers(@RequestParam Integer pageNumber, Integer pageSize) {
+        return ResponseEntity.ok(publisherService.getPublishers(PageRequest.of(pageNumber, pageSize)).stream()
+                .map(publisherMapper::toDTO)
+                .collect(Collectors.toList()));
+    }
 
     @Operation(summary = "Find publishers by name", description = "Returns a set of publishers based on the provided name")
     @ApiResponses(value = {

@@ -1,6 +1,8 @@
 package tdr.pet.weblibrary.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.publisher.MultiplePublishersFoundException;
 import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
@@ -19,6 +21,11 @@ import java.util.Set;
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
     private final PublisherMapper publisherMapper;
+
+    @Override
+    public Page<Publisher> getPublishers(PageRequest pageRequest) {
+        return publisherRepository.findAll(pageRequest);
+    }
 
     @Override
     public Set<Publisher> findPublishersByName(String name) {
