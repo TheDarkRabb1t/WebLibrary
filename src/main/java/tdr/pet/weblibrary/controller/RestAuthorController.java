@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,18 @@ public class RestAuthorController {
 
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
+
+    @Operation(summary = "Get authors", description = "Returns a list of authors based on page values")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request params")
+    })
+    @GetMapping(value = "/list", produces = "application/json")
+    public ResponseEntity<List<AuthorDTO>> getAuthors(@RequestParam Integer pageNumber, Integer pageSize) {
+        return ResponseEntity.ok(authorService.getAuthors(PageRequest.of(pageNumber, pageSize)).stream()
+                .map(authorMapper::toDTO)
+                .collect(Collectors.toList()));
+    }
 
     @Operation(summary = "Find authors by name", description = "Returns a list of authors based on the provided name")
     @ApiResponses(value = {

@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import tdr.pet.weblibrary.model.dto.BookDTO;
 import tdr.pet.weblibrary.model.entity.Author;
 import tdr.pet.weblibrary.model.entity.Book;
@@ -51,6 +54,25 @@ class TestBookService {
         book.setTitle("Sample Book");
         book.setAuthors(Set.of(author));
         book.setPublisher(publisher);
+    }
+
+    @Test
+    void testGetBooksWithPagination() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+
+        List<Book> books = List.of(book);
+        Page<Book> bookPage = new PageImpl<>(books, pageRequest, books.size());
+
+        when(bookRepository.findAll(pageRequest)).thenReturn(bookPage);
+
+        Page<Book> result = bookServiceImpl.getBooks(pageRequest);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
+        assertEquals(book.getTitle(), result.getContent().get(0).getTitle());
+
+        verify(bookRepository, times(1)).findAll(pageRequest);
     }
 
     @Test
