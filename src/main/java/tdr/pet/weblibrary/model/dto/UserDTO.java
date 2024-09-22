@@ -1,13 +1,8 @@
 package tdr.pet.weblibrary.model.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import tdr.pet.weblibrary.model.entity.UserRole;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -15,13 +10,15 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class UserDTO {
+    @Size(min = 3, max = 50)
+    private String firstName;
+    @Size(min = 3, max = 50)
+    private String lastName;
+    @Size(min = 4, max = 32)
     private String username;
-    @Email(message = "email required")
+    @Email(message = "incorrect email syntax")
     private String email;
-    private UserRole userRole;
-
-    @NotNull
-    @Size(min = 6, max = 32)
+    @Size(min = 6, max = 48)
     private String password;
 }
