@@ -1,6 +1,9 @@
 package tdr.pet.weblibrary.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
 import tdr.pet.weblibrary.exception.author.MultipleAuthorsFoundException;
@@ -18,6 +21,11 @@ import java.util.Set;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+
+    @Override
+    public Page<Author> getAuthors(PageRequest pageRequest) {
+        return authorRepository.findAll(pageRequest);
+    }
 
     @Override
     public List<Author> findAuthorsByName(String name) {
