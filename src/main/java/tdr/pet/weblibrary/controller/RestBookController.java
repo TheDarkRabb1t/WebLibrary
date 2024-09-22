@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +44,8 @@ public class RestBookController {
             @ApiResponse(responseCode = "400", description = "Invalid request params"),
     })
     @GetMapping(value = "/list", produces = "application/json")
-    public ResponseEntity<List<BookDTO>> getBooks(@RequestParam Integer pageNumber, Integer pageSize) {
-        return ResponseEntity.ok(bookService.getBooks(PageRequest.of(pageNumber, pageSize)).stream()
-                .map(bookMapper::toDTO)
-                .collect(Collectors.toList()));
+    public ResponseEntity<Page<BookDTO>> getBooks(@RequestParam Integer pageNumber, Integer pageSize) {
+        return ResponseEntity.ok(bookService.getBooks(PageRequest.of(pageNumber, pageSize)).map(bookMapper::toDTO));
     }
 
     @Operation(summary = "Find books by title", description = "Returns a list of books based on the provided title")

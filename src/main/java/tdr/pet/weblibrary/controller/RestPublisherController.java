@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,8 @@ public class RestPublisherController {
             @ApiResponse(responseCode = "400", description = "Invalid request params")
     })
     @GetMapping(value = "/list", produces = "application/json")
-    public ResponseEntity<List<PublisherDTO>> getPublishers(@RequestParam Integer pageNumber, Integer pageSize) {
-        return ResponseEntity.ok(publisherService.getPublishers(PageRequest.of(pageNumber, pageSize)).stream()
-                .map(publisherMapper::toDTO)
-                .collect(Collectors.toList()));
+    public ResponseEntity<Page<PublisherDTO>> getPublishers(@RequestParam Integer pageNumber, Integer pageSize) {
+        return ResponseEntity.ok(publisherService.getPublishers(PageRequest.of(pageNumber, pageSize)).map(publisherMapper::toDTO));
     }
 
     @Operation(summary = "Find publishers by name", description = "Returns a set of publishers based on the provided name")

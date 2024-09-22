@@ -92,12 +92,12 @@ public class TestRestBookController {
                         .param("pageSize", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$[0].title").value("Book 1"))
-                .andExpect(jsonPath("$[0].description").value("Description 1"))
-                .andExpect(jsonPath("$[0].isbn").value("1234567890123"))
-                .andExpect(jsonPath("$[1].title").value("Book 2"))
-                .andExpect(jsonPath("$[1].description").value("Description 2"))
-                .andExpect(jsonPath("$[1].isbn").value("1234567890124"));
+                .andExpect(jsonPath("$.content[0].title").value("Book 1"))
+                .andExpect(jsonPath("$.content[0].description").value("Description 1"))
+                .andExpect(jsonPath("$.content[0].isbn").value("1234567890123"))
+                .andExpect(jsonPath("$.content[1].title").value("Book 2"))
+                .andExpect(jsonPath("$.content[1].description").value("Description 2"))
+                .andExpect(jsonPath("$.content[1].isbn").value("1234567890124"));
     }
 
 

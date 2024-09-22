@@ -73,11 +73,12 @@ public class TestRestPublisherController {
                         .param("pageSize", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$[0].name").value("Publisher 1"))
-                .andExpect(jsonPath("$[0].address").value("Address 1"))
-                .andExpect(jsonPath("$[1].name").value("Publisher 2"))
-                .andExpect(jsonPath("$[1].address").value("Address 2"));
+                .andExpect(jsonPath("$.content[0].name").value("Publisher 1"))
+                .andExpect(jsonPath("$.content[0].address").value("Address 1"))
+                .andExpect(jsonPath("$.content[1].name").value("Publisher 2"))
+                .andExpect(jsonPath("$.content[1].address").value("Address 2"));
     }
+
 
     @Test
     void testFindPublishersByName() throws Exception {

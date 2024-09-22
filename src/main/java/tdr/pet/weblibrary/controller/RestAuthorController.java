@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +37,10 @@ public class RestAuthorController {
             @ApiResponse(responseCode = "400", description = "Invalid request params")
     })
     @GetMapping(value = "/list", produces = "application/json")
-    public ResponseEntity<List<AuthorDTO>> getAuthors(@RequestParam Integer pageNumber, Integer pageSize) {
-        return ResponseEntity.ok(authorService.getAuthors(PageRequest.of(pageNumber, pageSize)).stream()
-                .map(authorMapper::toDTO)
-                .collect(Collectors.toList()));
+    public ResponseEntity<Page<AuthorDTO>> getAuthors(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+        return ResponseEntity.ok(authorService.getAuthors(PageRequest.of(pageNumber, pageSize)).map(authorMapper::toDTO));
     }
+
 
     @Operation(summary = "Find authors by name", description = "Returns a list of authors based on the provided name")
     @ApiResponses(value = {
