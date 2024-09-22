@@ -1,5 +1,7 @@
 package tdr.pet.weblibrary.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import tdr.pet.weblibrary.model.dto.PublisherDTO;
 import tdr.pet.weblibrary.model.entity.Publisher;
 
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface PublisherService {
+    Page<Publisher> getPublishers(PageRequest pageRequest);
 
     Set<Publisher> findPublishersByName(String name);
 

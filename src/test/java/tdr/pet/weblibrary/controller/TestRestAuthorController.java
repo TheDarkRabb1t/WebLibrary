@@ -7,6 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
@@ -42,6 +46,32 @@ public class TestRestAuthorController {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(restAuthorController).build();
     }
+
+    @Test
+    void testGetAuthorsWithPagination() throws Exception {
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setName("John Doe");
+        authorDTO.setEmail("john.doe@example.com");
+        authorDTO.setImgUrl("http://example.com/image.jpg");
+
+        Author author = new Author();
+        List<Author> authors = List.of(author);
+        Page<Author> authorPage = new PageImpl<>(authors, PageRequest.of(0, 2), authors.size());
+
+        when(authorService.getAuthors(any(PageRequest.class))).thenReturn(authorPage);
+        when(authorMapper.toDTO(any(Author.class))).thenReturn(authorDTO);
+
+        mockMvc.perform(get("/api/v1/author/list")
+                        .param("pageNumber", "0")
+                        .param("pageSize", "2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.content[0].name").value("John Doe"))
+                .andExpect(jsonPath("$.content[0].email").value("john.doe@example.com"))
+                .andExpect(jsonPath("$.content[0].imgUrl").value("http://example.com/image.jpg"));
+    }
+
 
     @Test
     void testFindAuthorsByName() throws Exception {

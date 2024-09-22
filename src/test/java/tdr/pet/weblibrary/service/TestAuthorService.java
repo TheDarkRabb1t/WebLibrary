@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import tdr.pet.weblibrary.exception.author.AuthorNotFoundException;
 import tdr.pet.weblibrary.exception.author.MultipleAuthorsFoundException;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
@@ -38,6 +41,37 @@ class TestAuthorService {
         author.setId(1L);
         author.setEmail("author@example.com");
         author.setName("John Doe");
+    }
+    @Test
+    void testGetAuthorsWithPagination() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        List<Author> authors = List.of(author);
+        Page<Author> authorPage = new PageImpl<>(authors, pageRequest, authors.size());
+
+        when(authorRepository.findAll(pageRequest)).thenReturn(authorPage);
+
+        Page<Author> result = authorServiceImpl.getAuthors(pageRequest);
+
+        assertNotNull(result);
+        assertEquals(1, result.getContent().size());
+        assertEquals(author.getName(), result.getContent().get(0).getName());
+
+        verify(authorRepository, times(1)).findAll(pageRequest);
+    }
+
+    @Test
+    void testGetAuthorsWithEmptyPage() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        Page<Author> emptyPage = Page.empty(pageRequest);
+
+        when(authorRepository.findAll(pageRequest)).thenReturn(emptyPage);
+
+        Page<Author> result = authorServiceImpl.getAuthors(pageRequest);
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+
+        verify(authorRepository, times(1)).findAll(pageRequest);
     }
 
     @Test

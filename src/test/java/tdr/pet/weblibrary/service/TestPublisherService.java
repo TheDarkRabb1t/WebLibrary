@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import tdr.pet.weblibrary.exception.publisher.MultiplePublishersFoundException;
 import tdr.pet.weblibrary.exception.publisher.PublisherNotFoundException;
 import tdr.pet.weblibrary.model.dto.PublisherDTO;
@@ -38,6 +42,33 @@ class TestPublisherService {
         publisher.setId(1L);
         publisher.setName("Sample Publisher");
         publisher.setAddress("123 Main St");
+    }
+    @Test
+    void testGetPublishersPagination() {
+        Publisher publisher1 = new Publisher();
+        publisher1.setId(1L);
+        publisher1.setName("Publisher 1");
+
+        Publisher publisher2 = new Publisher();
+        publisher2.setId(2L);
+        publisher2.setName("Publisher 2");
+
+        List<Publisher> publishers = List.of(publisher1, publisher2);
+        PageImpl<Publisher> publisherPage = new PageImpl<>(publishers);
+
+        PageRequest pageable = PageRequest.of(0, 2);
+
+        when(publisherRepository.findAll(pageable)).thenReturn(publisherPage);
+
+        Page<Publisher> result = publisherServiceImpl.getPublishers(pageable);
+
+        assertEquals(2, result.getTotalElements());
+        assertEquals(1L, result.getContent().get(0).getId());
+        assertEquals("Publisher 1", result.getContent().get(0).getName());
+        assertEquals(2L, result.getContent().get(1).getId());
+        assertEquals("Publisher 2", result.getContent().get(1).getName());
+
+        verify(publisherRepository, times(1)).findAll(pageable);
     }
 
     @Test
