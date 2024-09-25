@@ -1,7 +1,6 @@
 package tdr.pet.weblibrary.config;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,10 +19,19 @@ import tdr.pet.weblibrary.service.UserService;
 @AllArgsConstructor
 public class WebSecurityConfiguration {
     private final UserService userService;
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs",
-            "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-            "/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html", "/api/auth/**",
-            "/api/test/**", "/authenticate"};
+
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/api/auth/**",
+            "/api/test/**",
+            "/api/v3/api-docs/**",
+            "/api/swagger-ui.html",
+            "/api/swagger-ui/**",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**"
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,9 +55,10 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(WHITE_LIST_URL).permitAll().anyRequest().authenticated()
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 }
