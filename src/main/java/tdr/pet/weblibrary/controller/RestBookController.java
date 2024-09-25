@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.dto.BookDTO;
@@ -123,6 +124,7 @@ public class RestBookController {
     }
 
     @Operation(summary = "Create a new book", description = "Creates a new book with the provided details")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Book created"),
             @ApiResponse(responseCode = "400", description = "Invalid book details supplied")
@@ -134,6 +136,7 @@ public class RestBookController {
     }
 
     @Operation(summary = "Update a book by ID", description = "Updates the details of an existing book by its ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Book updated"),
             @ApiResponse(responseCode = "400", description = "Invalid ID or book details supplied"),
@@ -147,6 +150,7 @@ public class RestBookController {
     }
 
     @Operation(summary = "Update a book by ISBN", description = "Updates the details of an existing book by its ISBN")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Book updated"),
             @ApiResponse(responseCode = "400", description = "Invalid ISBN or book details supplied"),
@@ -160,6 +164,7 @@ public class RestBookController {
     }
 
     @Operation(summary = "Delete a book by ID", description = "Deletes an existing book by its ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Book deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
@@ -172,6 +177,7 @@ public class RestBookController {
     }
 
     @Operation(summary = "Delete a book by ISBN", description = "Deletes an existing book by its ISBN")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Book deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ISBN supplied"),

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.dto.PublisherDTO;
@@ -66,6 +67,7 @@ public class RestPublisherController {
     }
 
     @Operation(summary = "Create a new publisher", description = "Creates a new publisher with the given details")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Publisher created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PublisherDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")})
@@ -76,6 +78,7 @@ public class RestPublisherController {
     }
 
     @Operation(summary = "Update a publisher by ID", description = "Updates an existing publisher by their ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Publisher updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PublisherDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid ID or input"),
@@ -87,6 +90,7 @@ public class RestPublisherController {
     }
 
     @Operation(summary = "Update a publisher by name", description = "Updates an existing publisher by their name")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Publisher updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PublisherDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid name or input"),
@@ -98,6 +102,7 @@ public class RestPublisherController {
     }
 
     @Operation(summary = "Delete a publisher by ID", description = "Deletes an existing publisher by their ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Publisher deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
@@ -109,6 +114,7 @@ public class RestPublisherController {
     }
 
     @Operation(summary = "Delete a publisher by name", description = "Deletes an existing publisher by their name")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Publisher deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid name supplied"),
