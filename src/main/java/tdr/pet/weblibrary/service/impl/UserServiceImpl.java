@@ -8,6 +8,7 @@ import tdr.pet.weblibrary.exception.user.UserCreationException;
 import tdr.pet.weblibrary.exception.user.UserNotFoundException;
 import tdr.pet.weblibrary.model.dto.UserDTO;
 import tdr.pet.weblibrary.model.entity.User;
+import tdr.pet.weblibrary.model.entity.UserRole;
 import tdr.pet.weblibrary.model.mapper.UserMapper;
 import tdr.pet.weblibrary.repository.UserRepository;
 import tdr.pet.weblibrary.service.UserService;
@@ -36,9 +37,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createNewUser(UserDTO userDTO) {
         if (existsByEmailOrUsername(userDTO.getEmail(), userDTO.getUsername())) {
-            userRepository.save(userMapper.toEntity(userDTO));
+            throw new UserCreationException();
         }
-        throw new UserCreationException();
+        User entity = userMapper.toEntity(userDTO);
+        entity.setUserRole(UserRole.READER);
+        userRepository.save(entity);
     }
 
     @Override
