@@ -25,7 +25,7 @@ public class RestUserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @Operation(summary = "Register a new user", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "Register a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "400", description = "Invalid user details")
@@ -36,7 +36,7 @@ public class RestUserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "User login", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "User login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
@@ -47,7 +47,7 @@ public class RestUserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "User logout", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "User logout")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success")
     })
@@ -58,7 +58,7 @@ public class RestUserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MANAGER')")
-    @Operation(summary = "Create a new user", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "Create a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "403", description = "Access denied")
@@ -70,7 +70,7 @@ public class RestUserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MANAGER')")
-    @Operation(summary = "Delete a user by ID", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "Delete a user by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Success"),
             @ApiResponse(responseCode = "403", description = "Access denied"),
@@ -83,7 +83,7 @@ public class RestUserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MANAGER')")
-    @Operation(summary = "Check if a user exists by email or username", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "Check if a user exists by email or username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "403", description = "Access denied")
@@ -94,7 +94,7 @@ public class RestUserController {
         return ResponseEntity.ok(exists);
     }
 
-    @Operation(summary = "Get paginated users", security = @SecurityRequirement(name = "Basic Authentication"))
+    @Operation(summary = "Get paginated users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
