@@ -3,6 +3,7 @@ package tdr.pet.weblibrary.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import tdr.pet.weblibrary.config.auth.CustomUserDetailsService;
 import tdr.pet.weblibrary.service.UserService;
 
@@ -55,10 +59,26 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/book/**", "/api/v1/publisher/**", "/api/v1/author/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/users/register", "/api/v1/users/login", "/api/v1/users/logout").permitAll()
+                                .requestMatchers(WHITE_LIST_URL).permitAll()
+                                .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**"))
+                .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }

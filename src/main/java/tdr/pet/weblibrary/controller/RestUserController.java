@@ -94,10 +94,12 @@ public class RestUserController {
         return ResponseEntity.ok(exists);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'MANAGER')")
     @Operation(summary = "Get paginated users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Access denied")
     })
     @GetMapping("/")
     public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam Integer pageNumber, Integer pageSize) {
