@@ -2,7 +2,7 @@ package tdr.pet.weblibrary.model.dto;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tdr.pet.weblibrary.model.entity.Genre;
+import tdr.pet.weblibrary.model.enums.Genre;
 
 import java.time.LocalDateTime;
 

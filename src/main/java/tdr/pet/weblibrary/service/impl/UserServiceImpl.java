@@ -8,7 +8,7 @@ import tdr.pet.weblibrary.exception.user.UserCreationException;
 import tdr.pet.weblibrary.exception.user.UserNotFoundException;
 import tdr.pet.weblibrary.model.dto.UserDTO;
 import tdr.pet.weblibrary.model.entity.User;
-import tdr.pet.weblibrary.model.entity.UserRole;
+import tdr.pet.weblibrary.model.enums.UserRole;
 import tdr.pet.weblibrary.model.mapper.UserMapper;
 import tdr.pet.weblibrary.repository.UserRepository;
 import tdr.pet.weblibrary.service.UserService;
