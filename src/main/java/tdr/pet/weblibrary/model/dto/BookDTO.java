@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tdr.pet.weblibrary.model.entity.Genre;
+import tdr.pet.weblibrary.model.enums.Genre;
 import tdr.pet.weblibrary.model.validation.annotation.ValidIsbn;
 
 import java.time.LocalDateTime;

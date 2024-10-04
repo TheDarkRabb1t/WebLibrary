@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import tdr.pet.weblibrary.model.dto.BookDTO;
 import tdr.pet.weblibrary.model.entity.Book;
-import tdr.pet.weblibrary.model.entity.Genre;
+import tdr.pet.weblibrary.model.enums.Genre;
 
 import java.time.LocalDateTime;
 

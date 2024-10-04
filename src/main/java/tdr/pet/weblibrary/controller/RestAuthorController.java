@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tdr.pet.weblibrary.model.dto.AuthorDTO;
 import tdr.pet.weblibrary.model.entity.Author;
@@ -69,6 +70,7 @@ public class RestAuthorController {
     }
 
     @Operation(summary = "Create a new author", description = "Creates a new author with the given details")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Author created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")
@@ -81,6 +83,7 @@ public class RestAuthorController {
     }
 
     @Operation(summary = "Update an author by ID", description = "Updates an existing author by their ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Author updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid ID or input"),
@@ -94,6 +97,7 @@ public class RestAuthorController {
     }
 
     @Operation(summary = "Update an author by email", description = "Updates an existing author by their email")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Author updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid email or input"),
@@ -107,6 +111,7 @@ public class RestAuthorController {
     }
 
     @Operation(summary = "Delete an author by ID", description = "Deletes an existing author by their ID")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Author deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
@@ -119,6 +124,7 @@ public class RestAuthorController {
     }
 
     @Operation(summary = "Delete an author by email", description = "Deletes an existing author by their email")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMINISTRATOR')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Author deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid email supplied"),
